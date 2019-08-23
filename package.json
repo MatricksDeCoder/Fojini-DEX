@@ -1,6 +1,9 @@
 {
   "name": "simple-decentralised-exchange",
   "version": "0.1.0",
+  "description": "Simple Decentralized Ethereum Token Exchange",
+  "author": "@Zed_developer @MatricksDeCoder infinitumcubed@gmail.com adopted from gregory@dappuniversity.com",
+
   "private": true,
   "dependencies": {
     "react": "^16.9.0",

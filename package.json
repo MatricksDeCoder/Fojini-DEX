@@ -29,8 +29,11 @@
     "redux": "^4.0.4",
     "redux-logger": "^3.0.6",
     "reselect": "^4.0.0",
-    "truffle": "^5.0.33",
-    "truffle-flattener": "^1.4.0"
+    "truffle": "^5.0.5",
+    "truffle-flattener": "^1.4.0",
+    "truffle-hdwallet-provider": "1.0.4",
+    "truffle-hdwallet-provider-privkey": "1.0.3",
+    "web3": "1.0.0-beta.46"
   },
   "scripts": {
     "start": "react-scripts start",

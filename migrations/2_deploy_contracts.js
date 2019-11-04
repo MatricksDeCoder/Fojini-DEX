@@ -1,4 +1,4 @@
-//migration is about changing the state of the blockchain
+//Token Contract
 const Token = artifacts.require("Token");
 
 module.exports = function(deployer) {

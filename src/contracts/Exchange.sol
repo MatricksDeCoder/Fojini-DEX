@@ -66,6 +66,8 @@ contract Exchange {
     event Withdraw(address token, address sender, uint256 amount, uint256 balance);
     //Order Event
     event Order(uint id,address user,address tokenGet,address tokenGive,uint amountGet,uint amountGive,uint timestamp);
+    //CancelOrder Event
+    event CancelOrder(uint id,address user,address tokenGet,address tokenGive,uint amountGet,uint amountGive,uint timestamp);
 
     //ether must be sent via depositEther only must have way to send back 
     //fallback best practise
@@ -125,6 +127,12 @@ contract Exchange {
     }
     
     function cancelOrder(uint _id) public {//orders not actually removed
-
+        _Order storage _order = orders[_id]; //fetch order from storage
+        //Order must be a valid order
+        require(_order.id == _id);
+        //You can only cancel your order
+        require(address(_order.user) == msg.sender);
+        orderCancelled[_id] = true;
+        emit CancelOrder(_id,msg.sender,_order.tokenGet,_order.tokenGive,_order.amountGet,_order.amountGive, now);
     }
 }

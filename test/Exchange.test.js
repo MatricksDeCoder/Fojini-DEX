@@ -286,6 +286,62 @@ contract('Exchange', (accounts) => {
                 
             });
 
+            describe('order actions', () => {
+
+                let etherAmount = tokenFormat('1');//amountGive
+                let amountGet   = tokenFormat('1');
+
+                beforeEach(async () => {
+                    await exchange.depositEther({from:user1, value:etherAmount});
+                    await exchange.makeOrder(token.address,
+                                             amountGet, 
+                                             ETHER_ADDRESS, 
+                                             etherAmount, 
+                                             {from: user1});
+                });
+
+                describe('cancelling orders', () => {
+
+                    let cancelOrder;
+                    beforeEach(async() => {
+                        cancelOrder = await exchange.cancelOrder('1',{from:user1});            
+                    });
+
+                    describe('success', () => {
+                        
+                        it('cancels an order', async () => {
+                            let cancelledOrder  = await exchange.orderCancelled(1);
+                            cancelledOrder.should.equal(true);
+                        });
+    
+                        it('emits correct CancelOrder event', () => {
+                            const event = cancelOrder.logs[0].args;
+                            assert.equal(cancelOrder.logs[0].event, 'CancelOrder');
+                            assert.equal(event.id.toString(),'1','Order has correct id!');
+                            assert.equal(event.user,user1, 'Sender address is correct!');
+                            assert.equal(event.tokenGet,token.address,'Token to get address is correct!');
+                            assert.equal(event.tokenGive,ETHER_ADDRESS, 'Token to give address is correct');
+                            assert.equal(event.amountGet.toString(),amountGet.toString(), 'Amount get for token is correct');
+                            assert.equal(event.amountGive.toString(),etherAmount.toString(), 'Amount give for exchange is correct');
+                        })
+    
+                    });
+    
+                    describe('failure', () => {
+                            it('rejects invalid order',async () => {
+                                await exchange.cancelOrder('2', {from:user1}).should.be.rejectedWith(EVM_REVERT);
+                            });   
+                            
+                            it('rejects unauthorised cancellations', async () => {
+                                //order exists but user2 is not the creator of it so is not authorised
+                                await exchange.cancelOrder('1', {from:user2}).should.be.rejectedWith(EVM_REVERT);
+                            }); 
+                    });      
+                    
+                });
+
+            });         
+
     });        
        
 });

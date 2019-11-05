@@ -11,8 +11,8 @@
  ** Set Account for Fee **
  **Deposit Tokens **
  **Withdraw Tokens
- **Deposit Ether
- **Withdraw Ether 
+ **Deposit Ether**
+ **Withdraw Ether** 
  **Check balances
  **Make orders
  **Cancel order
@@ -45,12 +45,27 @@ contract Exchange {
 
     //Deposit Event
     event Deposit(address token, address sender, uint256 amount, uint256 balance);
+    //Withdraw Event
+    event Withdraw(address token, address sender, uint256 amount, uint256 balance);
+
+    //ether must be sent via depositEther only must have way to send back 
+    //fallback best practise
+    function() external {
+        revert();
+    }
 
     //Deposit Ether
     function depositEther() public payable {
         tokens[ETHER][msg.sender] = tokens[ETHER][msg.sender].add(msg.value);
         //emit Deposit Event
         emit Deposit(ETHER, msg.sender, msg.value, tokens[ETHER][msg.sender]);
+    }
+
+    //Withdraw Ether
+    function withdrawEther(uint _amount) public payable {
+        tokens[ETHER][msg.sender] = tokens[ETHER][msg.sender].sub(_amount);
+        //emit Withdraw Event
+        emit Withdraw(ETHER, msg.sender, msg.value, tokens[ETHER][msg.sender]);
     }
     
     function depositToken(address _token, uint256 _amount) public {

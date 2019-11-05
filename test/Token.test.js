@@ -1,8 +1,6 @@
-import { tokenFormat } from './helpers';
+import { EVM_REVERT, tokenFormat } from './helpers';
 
 const Token = artifacts.require('./Token');
-
-const EVM_REVERT = 'VM Exception while processing transaction: revert';
 
 require('chai').use(require('chai-as-promised'))
                .should()

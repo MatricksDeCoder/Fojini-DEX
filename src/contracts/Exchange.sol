@@ -10,10 +10,10 @@
  ** Set Fee  **
  ** Set Account for Fee **
  **Deposit Tokens **
- **Withdraw Tokens
+ **Withdraw Tokens**
  **Deposit Ether**
  **Withdraw Ether** 
- **Check balances
+ **Check balances**
  **Make orders
  **Cancel order
  **Fill order
@@ -36,13 +36,16 @@ contract Exchange {
     mapping(address => mapping(address => uint256)) public tokens;
     //First address of token, second address of user who deposited token
 
+    //Model and store the order
+
+
+
     constructor(address _feeAccount, uint256 _feePercent) public {
         feeAccount = _feeAccount;
         feePercent = _feePercent;
     }
 
     //Events
-
     //Deposit Event
     event Deposit(address token, address sender, uint256 amount, uint256 balance);
     //Withdraw Event
@@ -63,9 +66,13 @@ contract Exchange {
 
     //Withdraw Ether
     function withdrawEther(uint _amount) public payable {
+        //sufficient balance
+        require(tokens[ETHER][msg.sender] >= _amount);
         tokens[ETHER][msg.sender] = tokens[ETHER][msg.sender].sub(_amount);
+        //send ether to sender
+        msg.sender.transfer(_amount);
         //emit Withdraw Event
-        emit Withdraw(ETHER, msg.sender, msg.value, tokens[ETHER][msg.sender]);
+        emit Withdraw(ETHER, msg.sender, _amount, tokens[ETHER][msg.sender]);
     }
     
     function depositToken(address _token, uint256 _amount) public {
@@ -79,6 +86,20 @@ contract Exchange {
         tokens[_token][msg.sender] = tokens[_token][msg.sender].add(_amount);
         //Emit event
         emit Deposit(_token, msg.sender, _amount, tokens[_token][msg.sender]);
+    }
+
+    function withdrawToken(address _token, uint256 _amount) public {
+        require(_token != ETHER);
+        //sufficient balance
+        require(tokens[_token][msg.sender] >= _amount);
+        tokens[_token][msg.sender] = tokens[_token][msg.sender].sub(_amount);
+        require(Token(_token).transfer(msg.sender, _amount));
+        //Emit event
+        emit Withdraw(_token, msg.sender, _amount, tokens[_token][msg.sender]);
+    }
+
+    function balanceOf(address _token, address _user) public view returns(uint256) {
+        return tokens[_token][_user];
     }
     
 }

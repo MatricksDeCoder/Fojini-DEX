@@ -39,7 +39,7 @@ contract('Exchange', (accounts) => {
           result.toString().should.equal(feePercent.toString());
         }); 
         
-       describe('depositing tokens', () => { 
+        describe('depositing tokens', () => { 
 
             let depositToken;
             let depositAmount = tokenFormat('0.5');
@@ -81,7 +81,7 @@ contract('Exchange', (accounts) => {
                 await exchange.depositToken(ETHER_ADDRESS, depositAmount, {from: user1}).should
                 .be
                 .rejectedWith(EVM_REVERT);
-           });
+                 });
                 
             });
         });
@@ -126,13 +126,12 @@ contract('Exchange', (accounts) => {
             let withdrawEther;
             let etherAmount = tokenFormat('1');
             let balance;
-            let depositEther;
             
             describe('successful withdrawal and emits event', () => { 
 
-                //approve first
+                //fund first
                 beforeEach(async () => {
-                    depositEther = await exchange.depositEther({from:user1, value: etherAmount});
+                    await exchange.depositEther({from:user1, value: etherAmount});
                 });
 
                 describe('success', () => {
@@ -150,21 +149,95 @@ contract('Exchange', (accounts) => {
                         assert.equal(withdrawEther.logs[0].event, 'Withdraw');
                         assert.equal(event.token,ETHER_ADDRESS,'Ether address is correct!');
                         assert.equal(event.sender,user1, 'Sender address is correct!');
-                        assert.equal(event.amount.toString(),etherAmount.toString(),'Ether Amount withdranw is correct!');
+                        assert.equal(event.amount.toString(),etherAmount.toString(),'Ether Amount withdrawn is correct!');
                         assert.equal(event.balance.toString(),'0','Ether Balance is correct!');
                     })
 
                 });
 
                 describe('failure', () => {
-
+                    it('rejects ether withdrawals insufficient balances', async () => {
+                        //try withdraw 2 ether when you have 1 ether only 
+                        await exchange.withdrawEther(tokenFormat('2'), {from: user1}).should
+                        .be
+                        .rejectedWith(EVM_REVERT);
+                         });
+                        
                 });
 
             });
-         
         });
-        
-       
-    });
 
+        describe('withdrawing tokens', () => { 
+
+                let withdrawToken;
+                let depositAmount = tokenFormat('1');
+                let balance;
+                
+                describe('successful withdrawal and emits event', () => { 
+    
+                    beforeEach(async () => {            
+                        await token.approve(exchange.address, depositAmount, {from:user1});
+                        await exchange.depositToken(token.address, depositAmount, {from:user1});
+                        withdrawToken = await exchange.withdrawToken(token.address,depositAmount, {from:user1});
+                    });
+    
+                    describe('success', () => {
+                    
+                        it('withdraws token', async () => {
+                            balance = await exchange.tokens(token.address,user1);
+                            balance.toString().should.equal('0');
+                        });
+    
+                        it('emits correct Withdraw event', () => {
+                            const event = withdrawToken.logs[0].args;
+                            assert.equal(withdrawToken.logs[0].event, 'Withdraw');
+                            assert.equal(event.token,token.address,'Token address is correct!');
+                            assert.equal(event.sender,user1, 'Sender address is correct!');
+                            assert.equal(event.amount.toString(),depositAmount.toString(),'Ether Amount withdrawn is correct!');
+                            assert.equal(event.balance.toString(),'0','Ether Balance is correct!');
+                        })
+    
+                    });
+    
+                    describe('failure', () => {
+                        it('rejects token withdrawals insufficient balances', async () => {
+                            //try withdraw 2 tokens when you have 1 token only 
+                            await exchange.withdrawToken(token.address,tokenFormat('2'), {from: user1}).should
+                            .be
+                            .rejectedWith(EVM_REVERT);
+                             });
+
+                        it('rejects ether withdrawals ', async () => {
+                                //try withdraw 2 tokens when you have 1 token only 
+                                await exchange.withdrawToken(ETHER_ADDRESS, tokenFormat('1'), {from: user1}).should
+                                .be
+                                .rejectedWith(EVM_REVERT);
+                                 });
+                            
+                    });
+    
+                });
+            });
+        
+        describe('checking balances', () => {
+                let amount = tokenFormat('0.1');
+                let balanceEther;
+                let balanceTokens;
+                beforeEach(async() => {
+                    await exchange.depositEther({from:user1, value:amount});
+                    await token.approve(exchange.address, amount, {from:user1});
+                    await exchange.depositToken(token.address, amount, {from:user1});                
+                });
+                it('returns correct balances', async () => {
+                    balanceEther = await exchange.balanceOf(ETHER_ADDRESS, user1);
+                    balanceEther.toString().should.equal(amount.toString());                    
+                    balanceTokens = await exchange.balanceOf(token.address, user1);                    
+                    balanceTokens.toString().should.equal(amount.toString());
+                });
+            })
+        
+
+    });        
+       
 });

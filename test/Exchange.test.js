@@ -235,8 +235,56 @@ contract('Exchange', (accounts) => {
                     balanceTokens = await exchange.balanceOf(token.address, user1);                    
                     balanceTokens.toString().should.equal(amount.toString());
                 });
-            })
-        
+            });
+
+        describe('making orders', () => {
+                let makeOrder;
+                let amountGet = tokenFormat('0.3');
+                let amountGive = tokenFormat('0.2');//ether to give for token
+                beforeEach(async() => {
+                    makeOrder = await exchange.makeOrder(token.address, 
+                                                         amountGet,
+                                                         ETHER_ADDRESS,
+                                                         amountGive,
+                                                         {from:user1}
+                                                        );              
+                });
+                describe('success', () => {
+                    
+                    it('creates and tracks an order', async () => {
+                        let orderCount  = await exchange.orderCount();
+                        orderCount.toString().should.equal('1');
+                  
+                        let order = await exchange.orders('1');
+                        assert.equal(order.id.toString(),'1','Order has correct id!');
+                        assert.equal(order.user,user1, 'Sender address is correct!');
+                        assert.equal(order.tokenGet,token.address,'Token to get address is correct!');
+                        assert.equal(order.tokenGive,ETHER_ADDRESS, 'Token to give address is correct');
+                        assert.equal(order.amountGet.toString(),amountGet.toString(), 'Amount get for token is correct');
+                        assert.equal(order.amountGive.toString(),amountGive.toString(), 'Amount give for exchange is correct');
+                        order.timestamp.toString().length.should.be.at.least(1, 'Timestamp is present');
+                    });
+
+                    it('emits correct Withdraw event', () => {
+                        const event = makeOrder.logs[0].args;
+                        assert.equal(makeOrder.logs[0].event, 'Order');
+                        assert.equal(event.id.toString(),'1','Order has correct id!');
+                        assert.equal(event.user,user1, 'Sender address is correct!');
+                        assert.equal(event.tokenGet,token.address,'Token to get address is correct!');
+                        assert.equal(event.tokenGive,ETHER_ADDRESS, 'Token to give address is correct');
+                        assert.equal(event.amountGet.toString(),amountGet.toString(), 'Amount get for token is correct');
+                        assert.equal(event.amountGive.toString(),amountGive.toString(), 'Amount give for exchange is correct');
+                    })
+
+                });
+
+                describe('failure', () => {
+                        it('', () => {
+
+                        });       
+                });      
+                
+            });
 
     });        
        

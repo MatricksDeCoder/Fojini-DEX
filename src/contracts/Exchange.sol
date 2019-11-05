@@ -14,7 +14,7 @@
  **Deposit Ether**
  **Withdraw Ether** 
  **Check balances**
- **Make orders
+ **Make orders**
  **Cancel order
  **Fill order
  **Charge fees
@@ -31,14 +31,28 @@ contract Exchange {
     address public feeAccount; //account for exchange fees
     uint256 public feePercent; // percentage of fees taken in trades etc by exchange
     address constant ETHER = address(0); //blank address is ether
+    uint256 public orderCount; //count of orders to work as id;
 
     //Keep track tokens deposited on exchange
     mapping(address => mapping(address => uint256)) public tokens;
     //First address of token, second address of user who deposited token
 
-    //Model and store the order
+    //Storage for orders
+    mapping(uint256 => _Order) public orders;
 
+    //Track cancelled orders
+    mapping(uint256 => bool) public orderCancelled;
 
+    //Model order
+    struct _Order {
+        uint id; //id order
+        address user;//user making order
+        address tokenGet; //token they want to purchase        
+        address tokenGive; //token to exchange with
+        uint amountGet; //amount of token want to get
+        uint amountGive; //amount of token to Give
+        uint timestamp; 
+    }
 
     constructor(address _feeAccount, uint256 _feePercent) public {
         feeAccount = _feeAccount;
@@ -50,6 +64,8 @@ contract Exchange {
     event Deposit(address token, address sender, uint256 amount, uint256 balance);
     //Withdraw Event
     event Withdraw(address token, address sender, uint256 amount, uint256 balance);
+    //Order Event
+    event Order(uint id,address user,address tokenGet,address tokenGive,uint amountGet,uint amountGive,uint timestamp);
 
     //ether must be sent via depositEther only must have way to send back 
     //fallback best practise
@@ -101,5 +117,14 @@ contract Exchange {
     function balanceOf(address _token, address _user) public view returns(uint256) {
         return tokens[_token][_user];
     }
+
+    function makeOrder(address _tokenGet,uint256 _amountGet, address _tokenGive, uint256 _amountGive) public {
+        orderCount = orderCount.add(1);
+        orders[orderCount]= _Order(orderCount, msg.sender, _tokenGet, _tokenGive,_amountGet, _amountGive, now);
+        emit Order(orderCount,msg.sender,_tokenGet,_tokenGive,_amountGet,_amountGive,now);        
+    }
     
+    function cancelOrder(uint _id) public {//orders not actually removed
+
+    }
 }

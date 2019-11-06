@@ -15,9 +15,9 @@
  **Withdraw Ether** 
  **Check balances**
  **Make orders**
- **Cancel order
- **Fill order
- **Charge fees
+ **Cancel order**
+ **Fill order**
+ **Charge fees**
 
 */
 
@@ -42,6 +42,9 @@ contract Exchange {
 
     //Track cancelled orders
     mapping(uint256 => bool) public orderCancelled;
+
+    //Track filled orders
+    mapping(uint256 => bool) public orderFilled;
 
     //Model order
     struct _Order {
@@ -68,6 +71,8 @@ contract Exchange {
     event Order(uint id,address user,address tokenGet,address tokenGive,uint amountGet,uint amountGive,uint timestamp);
     //CancelOrder Event
     event CancelOrder(uint id,address user,address tokenGet,address tokenGive,uint amountGet,uint amountGive,uint timestamp);
+    //Trade Event
+    event Trade(uint id, address user, address tokenGet, address tokenGive, uint amountGet, uint amountGive,address sender,uint timestamp);
 
     //ether must be sent via depositEther only must have way to send back 
     //fallback best practise
@@ -135,4 +140,37 @@ contract Exchange {
         orderCancelled[_id] = true;
         emit CancelOrder(_id,msg.sender,_order.tokenGet,_order.tokenGive,_order.amountGet,_order.amountGive, now);
     }
+
+    function fillOrder(uint256 _id) public {
+        //validate order before trade
+        require(_id > 0 && _id <= orderCount);
+        require(!orderFilled[_id]);//order is not filled
+        require(!orderCancelled[_id]); //order is not cancelled
+        //Get order
+        _Order storage _order = orders[_id];
+        //Make trade
+        _trade(_id,_order.user,_order.tokenGet, _order.amountGet, _order.tokenGive, _order.amountGive);
+        //Mark order as filled
+        orderFilled[_order.id] = true;
+    }
+
+
+    function _trade(uint _orderId, address _user, address _tokenGet,uint256 _amountGet, address _tokenGive, uint256 _amountGive) internal {
+        
+        //handle fees
+        uint256 _feeAmount = _amountGet.mul(feePercent).div(100);//
+        tokens[_tokenGet][feeAccount] = tokens[_tokenGet][feeAccount].add(_feeAmount);
+        
+        //for trade there exists a user who madeOrder to get the tokenGet and give tokenGive the msg.sender wants to give
+        tokens[_tokenGet][_user]  = tokens[_tokenGet][_user].add(_amountGet);
+        tokens[_tokenGive][_user] = tokens[_tokenGive][_user].sub(_amountGive);
+        
+        //update amounts of giver and taken from user and msg.sender(two parties to trade)
+        tokens[_tokenGet][msg.sender]  = tokens[_tokenGet][msg.sender].sub(_amountGet.add(_feeAmount)); //filler of trade
+        tokens[_tokenGive][msg.sender] = tokens[_tokenGive][msg.sender].add(_amountGive);
+
+        //Emit TradeEvent        
+        emit Trade(_orderId, _user, _tokenGet, _tokenGive, _amountGet, _amountGive,msg.sender,now);
+    }
+
 }

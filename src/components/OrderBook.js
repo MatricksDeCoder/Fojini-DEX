@@ -31,13 +31,12 @@ const showOrderBook = (props) => {
 
   return(
     <tbody>
-      {renderOrder()} 
+      {renderOrder()}
       <tr>
         <th>DAPP</th>
         <th>DAPP/ETH</th>
         <th>ETH</th>
       </tr>
-      {renderOrder}
     </tbody>
   )
 }

@@ -1,5 +1,4 @@
-import React, { Component } from 'react';
-//import { connect } from 'react-redux';
+import React, { Component } from 'react';import { connect } from 'react-redux';
 //import Spinner from './Spinner';
 
 const showFilledOrders = () => {
@@ -15,6 +14,7 @@ const showFilledOrders = () => {
 }
 
 class Trades extends Component {
+
   render() {
     return (
       <div className="vertical">
@@ -38,6 +38,10 @@ class Trades extends Component {
       </div>
     )
   }
+  
 }
 
-export default Trades;
+function mapStateToProps(state) {
+  return  {}
+}
+export default connect(mapStateToProps)(Trades);

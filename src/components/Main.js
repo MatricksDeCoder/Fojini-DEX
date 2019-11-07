@@ -5,8 +5,19 @@ import OrderBook from './OrderBook';
 import PriceChart from './PriceChart';
 import MyTransactions from './MyTransactions';
 import Trades from './Trades';
+import {connect} from 'react-redux';
+import {exchangeContractSelector} from '../store/selectors';
+import {loadAllOrders} from '../store/interactions';
 
 class Main extends Component {
+
+  componentWillMount() {
+    this.loadBlockchainData();
+  }
+
+  async loadBlockchainData() {
+    await loadAllOrders(this.props.exchangeContract);
+  }
 
   render() {
     return (
@@ -26,4 +37,10 @@ class Main extends Component {
   }
 }
 
-export default Main;
+function mapStateToProps(state) {
+  return {
+      exchangeContract: exchangeContractSelector(state)
+  }
+}
+
+export default connect(mapStateToProps)(Main);

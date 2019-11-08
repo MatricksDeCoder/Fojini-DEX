@@ -13,7 +13,7 @@ function web3(state = {}, action) {
 function web3Account(state = {}, action) {
     switch(action.type) {
         case 'WEB3_ACCOUNT_LOADED':
-            return {...state,connection:action.account}
+            return {...state,account:action.account}
         default:
             return state;
     }
@@ -22,7 +22,7 @@ function web3Account(state = {}, action) {
 function tokenContract(state = {}, action) {
     switch(action.type) {
         case 'TOKEN_CONTRACT_LOADED':
-            return {...state,loaded: true, connection:action.tokenContract}
+            return {...state,loaded: true, contract:action.tokenContract}
         default:
             return state;
     }
@@ -31,7 +31,7 @@ function tokenContract(state = {}, action) {
 function exchangeContract(state = {}, action) {
     switch(action.type) {
         case 'EXCHANGE_CONTRACT_LOADED':
-            return {...state,loaded: true, connection:action.exchangeContract}
+            return {...state,loaded: true, contract:action.exchangeContract}
         default:
             return state;
     }

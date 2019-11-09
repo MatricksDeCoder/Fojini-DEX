@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
-//import Spinner from './Spinner';
+import Spinner from './Spinner';
+import {orderBookSelector, ordersBookLoadedSelector}   from '../store/selectors';
+import {connect} from 'react-redux';
 
-const renderOrder = () => {
+const renderOrder = (order,props) => {
 
     return (
      
@@ -16,27 +18,29 @@ const renderOrder = () => {
           }
       >
       <tr
-        key={1}
+        key={order.id}
         className="order-book-order"
       >
-        <td>30</td>
-        <td className=''>25</td>
-        <td>100</td>
+        <td>order.tokenAmount</td>
+        <td className={`text-${order.orderTypeClass}`}>order.tokenPrice</td>
+        <td>order.etherAmount</td>
       </tr>
     </OverlayTrigger>
   )
 }
 
 const showOrderBook = (props) => {
-
+  //render orders
+  const {openOrders} = props;
   return(
     <tbody>
-      {renderOrder()}
+      {openOrders.sellOrders.map((order) => renderOrder(order))}
       <tr>
         <th>DAPP</th>
         <th>DAPP/ETH</th>
         <th>ETH</th>
       </tr>
+      {openOrders.buyOrders.map((order) => renderOrder(order))}
     </tbody>
   )
 }
@@ -51,7 +55,7 @@ class OrderBook extends Component {
           </div>
           <div className="card-body order-book">
             <table className="table table-dark table-sm small">
-              { showOrderBook(this.props)}
+              {this.props.ordersLoaded? showOrderBook(this.props.openOrders): <Spinner type = 'table' />}
             </table>
           </div>
         </div>
@@ -61,4 +65,11 @@ class OrderBook extends Component {
   }
 }
 
-export default OrderBook;
+function mapStateToProps(state) {
+  return { 
+    openOrders: orderBookSelector(state),
+    ordersLoaded : ordersBookLoadedSelector(state)
+  };
+}
+
+export default connect(mapStateToProps)(OrderBook);

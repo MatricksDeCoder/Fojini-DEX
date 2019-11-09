@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import Chart from "react-apexcharts";
+import {connect} from 'react-redux';
+import {priceChartLoadedSelector, priceChartSelector}   from '../store/selectors';
 
 class PriceChart extends Component {
   constructor(props) {
@@ -41,4 +43,12 @@ class PriceChart extends Component {
   }
 }
 
-export default PriceChart;
+function mapStateToProps(state) {
+
+  return {
+    priceChartLoaded: priceChartLoadedSelector(state),
+    priceChart: priceChartSelector(state),
+  }
+}
+
+export default connect(mapStateToProps)(PriceChart)

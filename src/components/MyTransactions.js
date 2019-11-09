@@ -1,32 +1,46 @@
-import React, { Component } from 'react'
-//import { connect } from 'react-redux'
-import { Tabs, Tab } from 'react-bootstrap'
-//import Spinner from './Spinner'
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { Tabs, Tab } from 'react-bootstrap';
+import Spinner from './Spinner';
+import {myOpenOrdersSelector, 
+        myTradesOrdersSelector,
+        myTradesOrdersLoadedSelector,
+        myOpenOrdersLoadedSelector 
+  } from '../store/selectors';
 
-const showMyFilledOrders = (props) => {
+const showMyOpenOrders = (openOrders) => {
 
   return(
     <tbody>
-          <tr key={1}>
-            <td className="text-muted">11/Nov/2018</td>
-            <td className=''>High 700</td>
-            <td className=''>7</td>
-          </tr>
+    { openOrders.map( (order) =>  {
+      return (
+          <tr key={order.id}>
+            <td className={`text-${order.orderTypeClass}`}>{order.tokenAmount}</td>
+            <td className={`text-${order.orderTypeClass}`}>{order.tokenPrice}</td>
+            <td className="text-muted">X</td>
+          </tr> );
+      }) 
+    }
     </tbody>
-  )
+  );
+
 }
 
-const showMyOpenOrders = (props) => {
+const showMyFilledOrders = (filledOrders) => {
 
   return(
     <tbody>
-          <tr key={1}>
-            <td className=''>350}</td>
-            <td className=''>12</td>
-            <td className="text-muted cancel-order">X</td>
-          </tr>
+    { filledOrders.map( (order) =>  {
+      return (
+          <tr key={order.id}>
+            <td className=''>{order.formattedTimestamp}</td>
+            <td className={`text-${order.orderTypeClass}`}>{order.orderSign}-{order.tokenAmount}</td>
+            <td className={`text-${order.orderTypeClass}`}>{order.tokenPrice}</td>
+          </tr> );
+      }) 
+    }
     </tbody>
-  )
+  );
 }
 
 class MyTransactions extends Component {
@@ -47,7 +61,7 @@ class MyTransactions extends Component {
                     <th>DEXED/ETH</th>
                   </tr>
                 </thead>
-                {showMyFilledOrders()}
+                {this.props.myFilledOrdersLoaded? showMyFilledOrders(this.props.myFilledOrders): <Spinner type = 'table'/>}
               </table>
             </Tab>
             <Tab eventKey="orders" title="Orders">
@@ -59,7 +73,7 @@ class MyTransactions extends Component {
                     <th>Cancel</th>
                   </tr>
                 </thead>
-                {showMyOpenOrders()}
+                {this.props.myOpenOrdersLoaded? showMyOpenOrders(this.props.myOpenOrders) : <Spinner type='table'/>}
               </table>
             </Tab>
           </Tabs>
@@ -69,4 +83,13 @@ class MyTransactions extends Component {
   }
 }
 
-export default MyTransactions;
+function mapStateToProps(state) {
+  return ({ 
+    myFilledOrders : myTradesOrdersSelector(state),
+    myOpenOrders:myOpenOrdersSelector(state),
+    myOpenOrdersLoaded:myOpenOrdersLoadedSelector(state),
+    myFilledOrdersLoaded: myTradesOrdersLoadedSelector(state)
+  });
+}
+
+export default connect(mapStateToProps)(MyTransactions);

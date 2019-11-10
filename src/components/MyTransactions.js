@@ -5,8 +5,12 @@ import Spinner from './Spinner';
 import {myOpenOrdersSelector, 
         myTradesOrdersSelector,
         myTradesOrdersLoadedSelector,
-        myOpenOrdersLoadedSelector 
+        myOpenOrdersLoadedSelector,
+        accountSelector,
+        exchangeContractSelector,
+        orderCancellingSelector,
   } from '../store/selectors';
+import {cancelOrder} from '../store/interactions';
 
 const showMyOpenOrders = (openOrders) => {
 
@@ -17,7 +21,9 @@ const showMyOpenOrders = (openOrders) => {
           <tr key={order.id}>
             <td className={`text-${order.orderTypeClass}`}>{order.tokenAmount}</td>
             <td className={`text-${order.orderTypeClass}`}>{order.tokenPrice}</td>
-            <td className="text-muted">X</td>
+            <td className="text-muted cancel-order"
+                onClick  ={cancelOrder(this.props.dispatch, this.props.exchangeContract, order,this.props.account)}
+            >X</td>
           </tr> );
       }) 
     }
@@ -73,7 +79,7 @@ class MyTransactions extends Component {
                     <th>Cancel</th>
                   </tr>
                 </thead>
-                {this.props.myOpenOrdersLoaded? showMyOpenOrders(this.props.myOpenOrders) : <Spinner type='table'/>}
+                {this.propscanDisplayOpenOrders? showMyOpenOrders(this.props.myOpenOrders) : <Spinner type='table'/>}
               </table>
             </Tab>
           </Tabs>
@@ -84,11 +90,16 @@ class MyTransactions extends Component {
 }
 
 function mapStateToProps(state) {
+  const myOpenOrdersLoaded = myOpenOrdersLoadedSelector(state);
+  const orderCancelling    = orderCancellingSelector(state);
+  const canDisplayOpenOrders = myOpenOrdersLoaded && !orderCancelling;
   return ({ 
     myFilledOrders : myTradesOrdersSelector(state),
-    myOpenOrders:myOpenOrdersSelector(state),
-    myOpenOrdersLoaded:myOpenOrdersLoadedSelector(state),
-    myFilledOrdersLoaded: myTradesOrdersLoadedSelector(state)
+    myOpenOrders:myOpenOrdersSelector(state),    
+    myFilledOrdersLoaded: myTradesOrdersLoadedSelector(state),
+    account: accountSelector(state),
+    exchangeContract: exchangeContractSelector(state),
+    canDisplayOpenOrders : canDisplayOpenOrders
   });
 }
 

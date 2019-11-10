@@ -5,7 +5,9 @@ import {web3Loaded,
         exchangeContractLoaded,
         //cancelledOrdersLoaded,
         //tradesOrdersLoaded,
-        //ordersLoaded
+        //ordersLoaded,
+        orderCancelling,
+        orderCancelled
        } from './actions';
 import Web3 from 'web3';
 import Token from '../abis/Token.json';
@@ -47,7 +49,7 @@ export const loadExchangeContract = async (web3, networkId, dispatch) => {
     }
   }
 
-  export const loadAllOrders = async (exchangeContract, dispatch) => {
+export const loadAllOrders = async (exchangeContract, dispatch) => {
 
      //Fetch Cancelled Orders from event stream
      //const cancelledOrdersStream = await exchangeContract.getPastEvents("CancelOrder", { fromBlock: 0, toBlock: "latest" });
@@ -72,4 +74,21 @@ export const loadExchangeContract = async (web3, networkId, dispatch) => {
 
       
       
+  }
+
+  export const cancelOrder = (dispatch, exchange, order, account) => {
+    //using event emit pattern vs promise, callback etc
+    exchange.methods.cancelOrder(order.id).send({from:account}).on('transactionHash', (hash) => {
+      dispatch(orderCancelling())
+    }).on('error', (error) => {
+      console.log(error);
+      window.alert("There was an error try again!");
+    })
+
+  }
+
+  export const subscribeToEvents = async (dispatch, exchange) => {
+      exchange.events.Cancel({}, (error,event) => {
+          dispatch(orderCancelled(event.returnValues));
+      })
   }

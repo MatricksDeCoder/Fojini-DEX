@@ -64,6 +64,33 @@ function orders(state = {}, action) {
     }
 }
 
+function orderCancelling(state = {}, action) {
+    switch(action.type) {
+        case 'ORDER_CANCELLING':
+            return {...state, orderCancelling: true}
+        default:
+            return state;
+    }
+}
+
+function orderCancelled(state = {}, action) {
+    switch(action.type) {
+        case 'ORDER_CANCELLED':
+            return {...state,
+                    orderCancelling: false, 
+                    cancelledOrders : {
+                        ...state.cancelledOrders,
+                        data:[
+                            state.cancelledOrders.data,
+                            action.order
+                        ]
+                    }
+                }
+        default:
+            return state;
+    }
+}
+
 
 
 const rootReducer = combineReducers({
@@ -73,7 +100,9 @@ const rootReducer = combineReducers({
     exchangeContract,
     cancelledOrders,
     tradesOrders,
-    orders
+    orders,
+    orderCancelling,
+    orderCancelled
 });
 
 export default rootReducer;

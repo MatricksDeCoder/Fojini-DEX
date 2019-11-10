@@ -1,45 +1,46 @@
 import React, { Component } from "react";
 import Chart from "react-apexcharts";
 import {connect} from 'react-redux';
+import Spinner from './Spinner';
 import {priceChartLoadedSelector, priceChartSelector}   from '../store/selectors';
+import { chartOptions, dummyData } from './PriceChart.config';
+
+
+console.log(dummyData);
+
+const priceSymbol = (lastPriceChange) => {
+  let output
+  if(lastPriceChange === '+') {
+    output = <span className="text-success">&#9650;</span> // Green up tiangle
+  } else {
+    output = <span className="text-danger">&#9660;</span> // Red down triangle
+  }
+  return(output)
+}
+
+const showPriceChart = (priceChart) => {
+  return(
+    <div className="price-chart">
+      <div className="price">
+        <h4>DAPP/ETH &nbsp; {priceSymbol(priceChart.lastPriceChange)} &nbsp; {priceChart.lastPrice}</h4>
+      </div>
+      <Chart options={chartOptions} series={priceChart.priceSeries} type='candlestick' width='100%' height='100%' />
+    </div>
+  )
+}
 
 class PriceChart extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      options: {
-        chart: {
-          id: "basic-bar"
-        },
-        xaxis: {
-          categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998]
-        }
-      },
-      series: [
-        {
-          name: "series-1",
-          data: [30, 40, 45, 50, 49, 60, 70, 91]
-        }
-      ]
-    };
-  }
-
   render() {
     return (
-      <div className="app">
-        <div className="row">
-          <div className="mixed-chart">
-            <Chart
-              options={this.state.options}
-              series={this.state.series}
-              type="bar"
-              width="500"
-            />
-          </div>
+      <div className="card bg-dark text-white">
+        <div className="card-header">
+          Price Chart
+        </div>
+        <div className="card-body">
+          {this.props.priceChartLoaded ? showPriceChart(this.props.priceChart) : <Spinner />}
         </div>
       </div>
-    );
+    )
   }
 }
 

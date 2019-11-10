@@ -275,6 +275,70 @@ const decoratedMyOpenOrder = (order, account) => {
     })
 }
 
-//Price Chart Selectors
-export const priceChartLoadedSelector = cancelledOrdersLoadedSelector;
-export const priceChartSelector       = cancelledOrdersLoadedSelector;
+//Price Chart Selectors 
+export const priceChartLoadedSelector = createSelector(tradesLoaded, bool => bool);//ready when all trades loaded
+export const priceChartSelector       = createSelector(
+    trades,
+    //turn trades into a series
+    (trades) => {
+        trades = trades.sort((a,b) => a.timestamp-b.timestamp);
+        trades = trades.map(trade => decoratedOrder(trade));
+        //get Last 2 orders for final price and final price change
+        let secondLastOrder, lastOrder;
+        [secondLastOrder, lastOrder] = trades.slice(orders.length-2, orders.length);
+        //get prices
+        const lastPrice = get(lastOrder, 'tokenPrice',0);
+        const secondLastPrice = get(secondLastOrder, 'tokenPrice',0);        
+
+        return ({
+            ...trades,
+            lastPriceChange: lastPrice>=secondLastPrice?'+':"-",
+            priceSeries: [{
+                data:buildGraphData(trades)
+            }]
+        })
+    }
+
+)
+
+const buildGraphData = (trades) => {
+    /*Graph data must be in form below
+          data: [
+            {
+              x: new Date(1538778600000),
+              y: [6629.81, 6650.5, 6623.04, 6633.33]
+            },
+            {
+              x: new Date(1538780400000),
+              y: [6632.01, 6643.59, 6620, 6630.11]
+            }]
+    */
+    //group candles every hour apart
+    trades = groupBy(trades, (trade) => moment.unix(trade.timestamp).startOf('hour').format());
+    //Get each hour where the data exists
+    const hours = Object.keys(trades);
+    //Build the grapgh ...Need to get open, close, high, low of prices and also 
+    const graphData = hours.map((hour) => {
+        //fetch all the orders by hour
+        const group = trades[hour]
+        const open = group[0]; //first order as they are in ascending order timestamp
+        const close = group[group.length-1]; //last order 
+        const low  = minBy(group,'tokenPrice');
+        const high = maxBy(group,'tokenPrice');
+        return {
+            x: new Date(hour),
+            y:[open.tokenPrice, high.tokenPrice, low.tokenPrice, close.tokenPrice]
+        }
+    })
+
+    return graphData;
+          
+}
+
+//Order cancelling and order cancelled selectors 
+
+const orderCancelling                     = state => get(state, 'orderCancelling',false);
+export const orderCancellingSelector      = createSelector(
+    orderCancelling,
+    bool => bool
+);

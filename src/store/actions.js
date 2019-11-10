@@ -46,3 +46,16 @@ export function ordersLoaded(orders) {
         orders
     }
 }
+
+export function orderCancelling() {
+    return {
+        type: 'ORDER-CANCELLING'
+    }
+}
+
+export function orderCancelled(order) {
+    return {
+        type: 'ORDER-CANCELLED',
+        order
+    }
+}

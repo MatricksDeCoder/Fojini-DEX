@@ -9,12 +9,17 @@ import {web3Loaded,
         orderCancelling,
         orderCancelled,
         orderTraded,
-        orderTrading
+        orderTrading,
+        etherBalanceLoaded,
+        tokenBalanceLoaded,
+        exchangeEtherBalanceLoaded,
+        exchangeTokenBalanceLoaded,
+        balancesLoading
        } from './actions';
 import Web3 from 'web3';
 import Token from '../abis/Token.json';
 import Exchange from '../abis/Exchange.json';
-//import { ETHER_ADDRESS } from '../helpers'
+import { ETHER_ADDRESS } from '../helpers';
 
 export const loadWeb3 = (dispatch) => {
     const web3 = new Web3(Web3.givenProvider || 'http://localhost:7545');
@@ -31,7 +36,7 @@ export const loadWeb3Account = async (web3, dispatch) => {
  
 export const loadTokenContract = async (web3, networkId, dispatch) => {
     try {
-      const token = web3.eth.Contract(Token.abi, Token.networks[networkId].address);
+      const token = await web3.eth.Contract(Token.abi, Token.networks[networkId].address);
       dispatch(tokenContractLoaded(token));
       return token;
     } catch (error) {
@@ -42,7 +47,7 @@ export const loadTokenContract = async (web3, networkId, dispatch) => {
 
 export const loadExchangeContract = async (web3, networkId, dispatch) => {
     try {
-      const exchange = web3.eth.Contract(Exchange.abi, Exchange.networks[networkId].address);
+      const exchange = await web3.eth.Contract(Exchange.abi, Exchange.networks[networkId].address);
       dispatch(exchangeContractLoaded(exchange));
       return exchange;
     } catch (error) {
@@ -89,7 +94,7 @@ export const loadAllOrders = async (exchangeContract, dispatch) => {
 
   }
 
-  export const subscribeToEvents = async (dispatch, exchange) => {
+  export const subscribeToEvents = (dispatch, exchange) => {
     
      //subscribe Cancel Event
       exchange.events.Cancel({}, (error,event) => {
@@ -114,4 +119,22 @@ export const loadAllOrders = async (exchangeContract, dispatch) => {
 
   }
 
+  export const loadBalances = async (dispatch, web3, exchange, token, account) => {
+    //load Ether Balances and Token Balances takes 
+    const etherBalance = web3.eth.getBalance(account);
+    dispatch(etherBalanceLoaded(etherBalance));
+
+    const tokenBalance = await Token.methods.balanceOf(account).call();
+    dispatch(tokenBalanceLoaded(tokenBalance));
+
+    //load balances on exchange
+    const exchangeEtherBalance = Exchange.methods.balanceOf(ETHER_ADDRESS, account);
+    dispatch(exchangeEtherBalanceLoaded(exchangeEtherBalance));
+
+    const exchangeTokenBalance = Token.methods.balanceOf(token.options.address, account).call();
+    dispatch(exchangeTokenBalanceLoaded(exchangeTokenBalance));
+
+    dispatch(balancesLoading())
+
+  }
  

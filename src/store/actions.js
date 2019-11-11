@@ -73,3 +73,72 @@ export function orderTraded(order) {
     }
 }
 
+export function etherBalanceLoaded(etherBalance) {
+    return {
+        type: 'ETHER-BALANCE-LOADED',
+        etherBalance
+    }
+}
+
+export function tokenBalanceLoaded(tokenBalance) {
+    return {
+        type: 'TOKEN-BALANCE-LOADED',
+        tokenBalance
+    }
+}
+
+export function exchangeEtherBalanceLoaded(exchangeEtherBalance) {
+    return {
+        type: 'EXCHANGE-ETHER-BALANCE-LOADED',
+        exchangeEtherBalance
+    }
+}
+
+export function exchangeTokenBalanceLoaded(exchangeTokenBalance) {
+    return {
+        type: 'EXCHANGE-TOKEN-BALANCE-LOADED',
+        exchangeTokenBalance
+    }
+}
+
+export function balancesLoading() {
+    return {
+        type: 'BALANCES-LOADING'
+    }
+}
+
+//Triggers that occur when depositing or withdrawing in the form
+//Triggers anytime one of the balances is loading
+export function etherDepositAmountChanged(amount) {
+    return {
+        type: 'ETHER-DEPOSIT-AMOUNT-CHANGED',
+        amount
+    }
+}
+
+export function tokenDepositAmountChanged(amount) {
+    return {
+        type: 'TOKEN-DEPOSIT-AMOUNT-CHANGED',
+        amount
+    }
+}
+
+export function etherWithdrawAmountChanged(amount) {
+    return {
+        type: 'ETHER-WITHDRAW-AMOUNT-CHANGED',
+        amount
+    }
+}
+
+export function tokenWithdrawAmountChanged(amount) {
+    return {
+        type: 'TOKEN-WITHDRAW-AMOUNT-CHANGED',
+        amount
+    }
+}
+
+
+
+        
+        
+

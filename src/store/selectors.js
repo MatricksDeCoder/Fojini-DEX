@@ -349,3 +349,59 @@ export const orderTradingSelector         = createSelector(
     orderTrading,
     bool => bool
 );
+
+//Balances from exchange and token 
+const etherBalance                      = state => get(state, 'etherBalance',0);
+export const etherBalanceSelector         = createSelector(
+    etherBalance,
+    (etherBalance) => etherFormat(etherBalance)
+);
+
+const tokenBalance                      = state => get(state, 'tokenBalance',0);
+export const tokenBalanceSelector         = createSelector(
+    tokenBalance,
+    (tokenBalance)=> tokenFormat(tokenBalance)
+);
+
+const exchangeTokenBalance                      = state => get(state, 'exchangeTokenBalance',0);
+export const exchangeTokenBalanceSelector         = createSelector(
+    exchangeTokenBalance,
+    (exchangeTokenBalance) => tokenFormat(exchangeTokenBalance)
+);
+
+const exchangeEtherBalance                      = state => get(state, 'exchangeEtherBalance',0);
+export const exchangeEtherBalanceSelector         = createSelector(
+    exchangeEtherBalance,
+    (exchangeEtherBalance) => tokenFormat(exchangeEtherBalance)
+);
+
+const  balancesLoading                           = state => get(state, 'balancesLoading',true);
+export const balancesLoadingSelector             = createSelector(
+    balancesLoading,
+    bool => bool
+);
+
+//deposit and withdraw amounts from the state based on inputs into the form
+const etherDepositAmount                       = state => get(state, 'etherDepositAmount',0);
+export const etherDepositAmountSelector        = createSelector(
+    etherDepositAmount,
+    (etherDepositAmount)=> tokenFormat(etherDepositAmount)
+);
+
+const tokenDepositAmount                       = state => get(state, 'tokenDepositAmount',0);
+export const tokenDepositAmountSelector        = createSelector(
+    tokenDepositAmount,
+    (tokenDepositAmount)=> tokenFormat(tokenDepositAmount)
+);
+
+const etherWithdrawAmount                       = state => get(state, 'etherWithdrawAmount',0);
+export const etherWithdrawAmountSelector        = createSelector(
+    etherWithdrawAmount,
+    (etherWithdrawAmount)=> tokenFormat(etherWithdrawAmount)
+);
+
+const tokenWithdrawAmount                       = state => get(state, 'tokenWithdrawAmount',0);
+export const tokenWithdrawAmountSelector        = createSelector(
+    tokenWithdrawAmount,
+    (tokenWithdrawAmount)=> tokenFormat(tokenWithdrawAmount)
+);

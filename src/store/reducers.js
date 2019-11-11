@@ -130,6 +130,115 @@ function orderTraded(state = {}, action) {
 }
 
 
+function etherBalanceLoaded(state = {}, action) {
+  
+    switch(action.type) {
+        case 'ETHER-BALANCE-LOADED':
+            return {...state, etherBalance: action.etherBalance
+                    }
+        default:
+            return state;
+    }
+
+}
+
+function exchangeEtherBalanceLoaded(state = {}, action) {
+  
+    switch(action.type) {
+        case 'EXCHANGE-ETHER-BALANCE-LOADED':
+            return {...state,exchangeEtherBlance: action.exchangeEtherBalance,loading:true
+                    }
+        default:
+            return state;
+    }
+
+}
+
+function tokenBalanceLoaded(state = {}, action) {
+  
+    switch(action.type) {
+        case 'TOKEN-BALANCE-LOADED':
+            return {...state,tokenBalane: action.tokenBalance,loading:true
+                    }
+        default:
+            return state;
+    }
+
+}
+
+
+function exchangeTokenBalanceLoaded(state = {}, action) {
+  
+    switch(action.type) {
+        case 'EXCHANGE-TOKEN-BALANCE-LOADED':
+            return {...state,exchangeToknBalance:action.exchangeTokenBalance,loading:true
+                    }
+        default:
+            return state;
+    }
+
+}
+
+function balancesLoading(state = {}, action) {
+  
+    switch(action.type) {
+        case 'BALANCES-LOADING':
+            return {...state,balancesLoading:true
+                    }
+        default:
+            return state;
+    }
+
+}
+
+function etherDepositAmountChanged(state = {}, action) {
+  
+    switch(action.type) {
+        case 'ETHER-DEPOSIT-AMOUNT-CHANGED':
+            return {...state,etherDepositAmount:action.amount
+                    }
+        default:
+            return state;
+    }
+
+}
+
+function tokenDepositAmountChanged(state = {}, action) {
+  
+    switch(action.type) {
+        case 'TOKEN-DEPOSIT-AMOUNT-CHANGED':
+            return {...state,tokenDepositAmount:action.amount
+                    }
+        default:
+            return state;
+    }
+
+}
+
+function etherWithdrawAmountChanged(state = {}, action) {
+  
+    switch(action.type) {
+        case 'ETHER-WITHDRAW-AMOUNT-CHANGED':
+            return {...state,etherWithdrawAmount:action.amount
+                    }
+        default:
+            return state;
+    }
+
+}
+
+function tokenWithdrawAmountChanged(state = {}, action) {
+  
+    switch(action.type) {
+        case 'TOKEN-WITHDRAW-AMOUNT-CHANGED':
+            return {...state,tokenWithdrawAmount:action.amount
+                    }
+        default:
+            return state;
+    }
+
+}
+
 const rootReducer = combineReducers({
     web3,
     web3Account,
@@ -141,7 +250,16 @@ const rootReducer = combineReducers({
     orderCancelling,
     orderCancelled,
     orderTrading,
-    orderTraded
+    orderTraded,
+    etherBalanceLoaded,
+    exchangeEtherBalanceLoaded,
+    tokenBalanceLoaded,
+    exchangeTokenBalanceLoaded,
+    balancesLoading,
+    etherDepositAmountChanged,
+    tokenDepositAmountChanged,
+    etherWithdrawAmountChanged,
+    tokenWithdrawAmountChanged
 });
 
 export default rootReducer;

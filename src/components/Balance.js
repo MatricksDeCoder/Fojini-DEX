@@ -1,13 +1,54 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Tabs, Tab } from 'react-bootstrap'
 import Spinner from './Spinner'
-class Balance extends Component {
+import {
+  loadBalances
+} from '../store/interactions'
+import {
+  exchangeContractSelector,
+  accountSelector,  
+  tokenContractSelector,
+  web3Selector,
+  etherBalanceSelector,
+  tokenBalanceSelector,
+  exchangeEtherBalanceSelector,
+  exchangeTokenBalanceSelector,
+  balancesLoadingSelector,
+  etherDepositAmountSelector,
+  tokenDepositAmountSelector,
+  etherWithdrawAmountSelector,
+  tokenWithdrawAmountSelector
+} from '../store/selectors';
+import {
+  etherDepositAmountChanged,
+  tokenDepositAmountChanged,
+  etherWithdrawAmountChanged,
+  tokenWithdrawAmountChanged
+} from '../store/actions';
 
-  render() {
-    return (
-      
-      <Tabs defaultActiveKey="deposit" className="bg-dark text-white">
+
+const showForm = (props) => {
+
+  const {
+    dispatch,
+    exchange,
+    token,
+    web3,
+    account,
+    etherBalance,
+    tokenBalance,
+    exchangeEtherBalance,
+    exchangeTokenBalance,
+    etherDepositAmount,
+    tokenDepositAmount,
+    etherWithdrawAmount,
+    tokenWithdrawAmount
+  } = props;
+
+
+  return(
+    <Tabs defaultActiveKey="deposit" className="bg-dark text-white">
 
       <Tab eventKey="deposit" title="Deposit" className="bg-dark">
         <table className="table table-dark table-sm small">
@@ -21,17 +62,21 @@ class Balance extends Component {
           <tbody>
             <tr>
               <td>ETH</td>
-              <td>10 Ether</td>
-              <td>10 Exchange Ether Balancet</td>
+              <td>{etherBalance}</td>
+              <td>{exchangeEtherBalance}</td>
             </tr>
           </tbody>
         </table>
 
-        <form className="row">
+        <form className="row" onSubmit={(event) => {
+          event.preventDefault()
+          depositEther(dispatch, exchange, web3, etherDepositAmount, account)
+        }}>
           <div className="col-12 col-sm pr-sm-2">
             <input
             type="text"
             placeholder="ETH Amount"
+            onChange={(e) => dispatch(etherDepositAmountChanged(e.target.value) ) }
             className="form-control form-control-sm bg-dark text-white"
             required />
           </div>
@@ -44,17 +89,21 @@ class Balance extends Component {
           <tbody>
             <tr>
               <td>DAPP</td>
-              <td>10 Tokens</td>
-              <td>10 Tokens for Exchange</td>
+              <td>{tokenBalance}</td>
+              <td>{exchangeTokenBalance}</td>
             </tr>
           </tbody>
         </table>
 
-        <form className="row" >
+        <form className="row" onSubmit={(event) => {
+          event.preventDefault()
+          depositToken(dispatch, exchange, web3, token, tokenDepositAmount, account)
+        }}>
           <div className="col-12 col-sm pr-sm-2">
             <input
             type="text"
             placeholder="DAPP Amount"
+            onChange={(e) => dispatch( tokenDepositAmountChanged(e.target.value) )}
             className="form-control form-control-sm bg-dark text-white"
             required />
           </div>
@@ -78,17 +127,21 @@ class Balance extends Component {
           <tbody>
             <tr>
               <td>ETH</td>
-              <td>5 Ether</td>
-              <td>5 Ether Exchange</td>
+              <td>{etherBalance}</td>
+              <td>{exchangeEtherBalance}</td>
             </tr>
           </tbody>
         </table>
 
-        <form className="row" >
+        <form className="row" onSubmit={(event) => {
+          event.preventDefault()
+          withdrawEther(dispatch, exchange, web3, etherWithdrawAmount, account)
+        }}>
           <div className="col-12 col-sm pr-sm-2">
             <input
             type="text"
             placeholder="ETH Amount"
+            onChange={(e) => dispatch( etherWithdrawAmountChanged(e.target.value) )}
             className="form-control form-control-sm bg-dark text-white"
             required />
           </div>
@@ -101,17 +154,21 @@ class Balance extends Component {
           <tbody>
             <tr>
               <td>DAPP</td>
-              <td>5 Token</td>
-              <td>5 Token Exchange</td>
+              <td>{tokenBalance}</td>
+              <td>{exchangeTokenBalance}</td>
             </tr>
           </tbody>
         </table>
 
-        <form className="row" >
+        <form className="row" onSubmit={(event) => {
+          event.preventDefault()
+          withdrawToken(dispatch, exchange, web3, token, tokenWithdrawAmount, account)
+        }}>
           <div className="col-12 col-sm pr-sm-2">
             <input
             type="text"
             placeholder="DAPP Amount"
+            onChange={(e) => dispatch( tokenWithdrawAmountChanged(e.target.value) )}
             className="form-control form-control-sm bg-dark text-white"
             required />
           </div>
@@ -122,15 +179,53 @@ class Balance extends Component {
 
       </Tab>
     </Tabs>
+  )
+}
 
-    );
+class Balance extends Component {
+
+  componentWillMount() {
+    this.loadBlockchainData()
+  }
+
+  async loadBlockchainData() {
+    const { dispatch, web3, exchange, token, account } = this.props;
+    await loadBalances(dispatch, web3, exchange, token, account);
+  }
+
+  render() {
+    return (
+      <div className="card bg-dark text-white">
+        <div className="card-header">
+          Balance
+        </div>
+        <div className="card-body">
+          {this.props.showForm ? showForm(this.props) : <Spinner />}
+        </div>
+      </div>
+    )
   }
 }
 
 function mapStateToProps(state) {
-  return { 
+
+  return {
+
+    balancesLoading : balancesLoadingSelector(state),
+    showForm :!balancesLoadingSelector(state),
     account: accountSelector(state),
-  };
+    exchange: exchangeContractSelector(state),
+    token: tokenContractSelector(state),
+    web3: web3Selector(state),
+    etherBalance :etherBalanceSelector(state),
+    tokenBalance :tokenBalanceSelector(state),
+    exchangeEtherBalance : exchangeEtherBalanceSelector(state),
+    exchangeTokenBalance : exchangeTokenBalanceSelector(state),
+    etherDepositAmount : etherDepositAmountSelector(state),
+    tokenDepositAmount : tokenDepositAmountSelector(state),
+    etherWithdrawAmount : etherWithdrawAmountSelector(state),
+    tokenWithdrawAmount : tokenWithdrawAmountSelector(state)
+  }
 }
 
-export default connect(mapStateToProps)(Balance);
+export default connect(mapStateToProps)(Balance)

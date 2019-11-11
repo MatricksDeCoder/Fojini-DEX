@@ -1,25 +1,32 @@
 import React, { Component } from 'react';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import Spinner from './Spinner';
-import {orderBookSelector, ordersBookLoadedSelector}   from '../store/selectors';
+import {orderBookSelector, 
+        ordersBookLoadedSelector,
+        accountSelector,
+        exchangeContractSelector,
+        orderTradingSelector
+       }   from '../store/selectors';
 import {connect} from 'react-redux';
+import {doTrade} from '../store/interactions';
 
-const renderOrder = (order,props) => {
+const renderOrder = (order) => {
 
     return (
      
       <OverlayTrigger
-          key={1}
+          key={order.id}
           placement='auto'
           overlay={
-            <Tooltip id={1}>
-              {`Click here to fill order`}
+            <Tooltip id={order.id}>
+              {`Click here to fill order ${order.orderSign}`}
             </Tooltip>
           }
       >
       <tr
         key={order.id}
         className="order-book-order"
+        onClick = {() => doTrade(this.props.dispatch, this.props.exchangeContract, order,this.props.account)}
       >
         <td>order.tokenAmount</td>
         <td className={`text-${order.orderTypeClass}`}>order.tokenPrice</td>
@@ -55,7 +62,7 @@ class OrderBook extends Component {
           </div>
           <div className="card-body order-book">
             <table className="table table-dark table-sm small">
-              {this.props.ordersLoaded? showOrderBook(this.props.openOrders): <Spinner type = 'table' />}
+              {this.props.canDisplayOpenOrders? showOrderBook(this.props.openOrders): <Spinner type = 'table' />}
             </table>
           </div>
         </div>
@@ -66,9 +73,15 @@ class OrderBook extends Component {
 }
 
 function mapStateToProps(state) {
+
+  const ordersLoaded   = ordersBookLoadedSelector(state);
+  const ordersTrading  = orderTradingSelector(state);
+  const canDisplayOpenOrders = ordersLoaded && !ordersTrading;
   return { 
     openOrders: orderBookSelector(state),
-    ordersLoaded : ordersBookLoadedSelector(state)
+    account: accountSelector(state),
+    exchangeContract: exchangeContractSelector(state),
+    canDisplayOpenOrders : canDisplayOpenOrders
   };
 }
 

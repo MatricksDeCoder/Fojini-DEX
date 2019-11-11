@@ -342,3 +342,10 @@ export const orderCancellingSelector      = createSelector(
     orderCancelling,
     bool => bool
 );
+
+//Order trading 
+const orderTrading                        = state => get(state, 'orderTrading',false);
+export const orderTradingSelector         = createSelector(
+    orderTrading,
+    bool => bool
+);

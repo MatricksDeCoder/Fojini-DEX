@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-//import { connect } from 'react-redux'
+import { connect } from 'react-redux'
 import { Tabs, Tab } from 'react-bootstrap'
-//import Spinner from './Spinner'
-
+import Spinner from './Spinner'
 class Balance extends Component {
 
   render() {
@@ -128,4 +127,10 @@ class Balance extends Component {
   }
 }
 
-export default Balance;
+function mapStateToProps(state) {
+  return { 
+    account: accountSelector(state),
+  };
+}
+
+export default connect(mapStateToProps)(Balance);

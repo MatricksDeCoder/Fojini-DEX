@@ -22,7 +22,7 @@ const showMyOpenOrders = (openOrders) => {
             <td className={`text-${order.orderTypeClass}`}>{order.tokenAmount}</td>
             <td className={`text-${order.orderTypeClass}`}>{order.tokenPrice}</td>
             <td className="text-muted cancel-order"
-                onClick  ={cancelOrder(this.props.dispatch, this.props.exchangeContract, order,this.props.account)}
+                onClick  ={(e) => cancelOrder(this.props.dispatch, this.props.exchangeContract, order,this.props.account)}
             >X</td>
           </tr> );
       }) 

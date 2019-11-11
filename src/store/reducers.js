@@ -92,6 +92,43 @@ function orderCancelled(state = {}, action) {
 }
 
 
+function orderTrading(state = {}, action) {
+    switch(action.type) {
+        case 'ORDER_TRADING':
+            return {...state, orderTrading: true}
+        default:
+            return state;
+    }
+}
+
+function orderTraded(state = {}, action) {
+    //prevent duplicate orders
+    let index,data;
+    index  = state.tradesOrders.data.findIndex(order => order.id === action.order.id);
+
+    if(index === -1) {
+        data = [
+            state.tradesOrders.data,
+            action.order
+        ]
+    } else {
+        data = state.tradesOrders.data; //already existing trades 
+    }
+
+    switch(action.type) {
+        case 'ORDER_TRADED':
+            return {...state,
+                    orderTrading: false, 
+                    tradesOrders : {
+                        ...state.tradesOrders,
+                        data:data
+                    }
+                }
+        default:
+            return state;
+    }
+}
+
 
 const rootReducer = combineReducers({
     web3,
@@ -102,7 +139,9 @@ const rootReducer = combineReducers({
     tradesOrders,
     orders,
     orderCancelling,
-    orderCancelled
+    orderCancelled,
+    orderTrading,
+    orderTraded
 });
 
 export default rootReducer;

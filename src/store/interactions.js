@@ -7,7 +7,9 @@ import {web3Loaded,
         //tradesOrdersLoaded,
         //ordersLoaded,
         orderCancelling,
-        orderCancelled
+        orderCancelled,
+        orderTraded,
+        orderTrading
        } from './actions';
 import Web3 from 'web3';
 import Token from '../abis/Token.json';
@@ -88,7 +90,28 @@ export const loadAllOrders = async (exchangeContract, dispatch) => {
   }
 
   export const subscribeToEvents = async (dispatch, exchange) => {
+    
+     //subscribe Cancel Event
       exchange.events.Cancel({}, (error,event) => {
           dispatch(orderCancelled(event.returnValues));
-      })
+      });
+     //subscribe Trade Event
+      exchange.events.Trade({}, (error,event) => {
+        dispatch(orderTraded(event.returnValues));
+     });
+
+
   }
+
+  export const doTrade = (dispatch, exchange, order, account) => {
+    //using event emit pattern vs promise, callback etc
+    exchange.methods.cancelOrder(order.id).send({from:account}).on('transactionHash', (hash) => {
+      dispatch(orderTrading())
+    }).on('error', (error) => {
+      console.log(error);
+      window.alert("There was an error try again!");
+    })
+
+  }
+
+ 

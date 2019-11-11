@@ -59,3 +59,17 @@ export function orderCancelled(order) {
         order
     }
 }
+
+export function orderTrading() {
+    return {
+        type: 'ORDER-TRADING'
+    }
+}
+
+export function orderTraded(order) {
+    return {
+        type: 'ORDER-TRADED',
+        order
+    }
+}
+

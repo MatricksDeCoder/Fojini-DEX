@@ -101,6 +101,7 @@ function orderTrading(state = {}, action) {
     }
 }
 
+
 function orderTraded(state = {}, action) {
     //prevent duplicate orders
     let index,data;
@@ -239,6 +240,139 @@ function tokenWithdrawAmountChanged(state = {}, action) {
 
 }
 
+function depositDone(state = {}, action) {
+  
+    switch(action.type) {
+        case 'DEPOSIT-DONE':
+            return {...state,balancesLoading:false
+                    }
+        default:
+            return state;
+    }
+
+}
+
+function withdrawDone(state = {}, action) {
+  
+    switch(action.type) {
+        case 'WITHDRAW-DONE':
+            return {...state,balancesLoading:false
+                    }
+        default:
+            return state;
+    }
+
+}
+
+
+//Making new buy and sell order with amounts and prices
+//Making buy and sell orders
+function buyOrderAmountChanged(state = {}, action) {
+  
+    switch(action.type) {
+        case 'BUY-ORDER-AMOUNT-CHANGED':
+            return {...state,buyOrderAmount:action.amount
+                    }
+        default:
+            return state;
+    }
+
+}
+
+function sellOrderAmountChanged(state = {}, action) {
+  
+    switch(action.type) {
+        case 'SELL-ORDER-AMOUNT-CHANGED':
+            return {...state,sellOrderAmount:action.amount
+                    }
+        default:
+            return state;
+    }
+
+}
+
+function sellOrderPriceChanged(state = {}, action) {
+  
+    switch(action.type) {
+        case 'SELL-ORDER-PRICE-CHANGED':
+            return {...state,sellOrderPrice:action.price
+                    }
+        default:
+            return state;
+    }
+
+}
+
+function buyOrderPriceChanged(state = {}, action) {
+  
+    switch(action.type) {
+        case 'BUY-ORDER-PRICE-CHANGED':
+            return {...state,buyOrderPrice:action.price
+                    }
+        default:
+            return state;
+    }
+
+}
+
+
+function buyOrder(state = {}, action) {
+    switch(action.type) {
+        case 'BUY-ORDER':
+            return {...state, buyOrder: true}
+        default:
+            return state;
+    }
+}
+
+function sellOrder(state = {}, action) {
+    switch(action.type) {
+        case 'SELL-ORDER':
+            return {...state, sellOrder: true}
+        default:
+            return state;
+    }
+}
+
+
+function orderMade(state = {}, action) {
+    //prevent duplicate new orders
+    let index,data;
+    index  = state.allOrders.data.findIndex(order => order.id === action.order.id);
+
+    if(index === -1) {
+        data = [
+            state.allOrders.data,
+            action.order
+        ]
+    } else {
+        data = state.alllOrders.data; //already existing trades 
+    }
+
+    switch(action.type) {
+        case 'ORDER_MADE':
+            return {...state,
+                    allOrders : {
+                        ...state.allOrders,
+                        data:data
+                    },
+                    buyOrder: {
+                        ...state.buyOrder,
+                        data:data,
+                        makingOrder: false
+                    },
+                    sellOrder: {
+                        ...state.sellOrder,
+                        data:data,
+                        makingOrder: false
+                    }
+                }
+        default:
+            return state;
+    }
+}
+
+
 const rootReducer = combineReducers({
     web3,
     web3Account,
@@ -259,7 +393,16 @@ const rootReducer = combineReducers({
     etherDepositAmountChanged,
     tokenDepositAmountChanged,
     etherWithdrawAmountChanged,
-    tokenWithdrawAmountChanged
+    tokenWithdrawAmountChanged,
+    depositDone,
+    withdrawDone,
+    buyOrderAmountChanged,
+    sellOrderAmountChanged,
+    buyOrderPriceChanged,
+    sellOrderPriceChanged,
+    buyOrder,
+    sellOrder,
+    orderMade
 });
 
 export default rootReducer;

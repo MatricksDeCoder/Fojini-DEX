@@ -2,10 +2,14 @@
 const Token = artifacts.require("Token");
 const Exchange = artifacts.require("Exchange");
 
-module.exports = aysync function(deployer) {  
+//web3 and accounts are available in the migrations deployer
+module.exports = async function(deployer) {  
 
-  const accounts = await web3.eth.getAccounts();
+  const accounts   = await web3.eth.getAccounts();
+  const account    = accounts[0];
+  const feePercent = 1;
+
   await deployer.deploy(Token);
-  await deployer.deploy(Exchange,accounts[1], 1);
+  await deployer.deploy(Exchange,account, feePErcent);
 
 };

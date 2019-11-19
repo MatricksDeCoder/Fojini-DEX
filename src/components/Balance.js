@@ -3,7 +3,11 @@ import { connect } from 'react-redux'
 import { Tabs, Tab } from 'react-bootstrap'
 import Spinner from './Spinner'
 import {
-  loadBalances
+  loadBalances,
+  depositEther,
+  depositToken,
+  withdrawEther,
+  withdrawToken
 } from '../store/interactions'
 import {
   exchangeContractSelector,

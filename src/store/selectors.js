@@ -405,3 +405,11 @@ export const tokenWithdrawAmountSelector        = createSelector(
     tokenWithdrawAmount,
     (tokenWithdrawAmount)=> tokenFormat(tokenWithdrawAmount)
 );
+
+//buy and sell orders selectors
+const  buyOrder = state => get(state, 'buyOrder');
+export const buyOrderSelector = createSelector(buyOrder, o => o);
+
+const  sellOrder = state => get(state, 'sellOrder');
+export const sellOrderSelector = createSelector(sellOrder, o => o);
+

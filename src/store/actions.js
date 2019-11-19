@@ -138,7 +138,61 @@ export function tokenWithdrawAmountChanged(amount) {
 }
 
 
+export function depositDone(amount) {
+    return {
+        type: 'DEPOSIT-DONE'
+    }
+}
 
-        
-        
+export function withdrawDone(amount) {
+    return {
+        type: 'WTTHDRAW-DONE'
+    }
+}
 
+//Making buy and sell orders
+export function buyOrderAmountChanged(amount) {
+    return {
+        type: 'BUY-ORDER-AMOUNT-CHANGED',
+        amount
+    }
+}
+
+export function sellOrderAmountChanged(amount) {
+    return {
+        type: 'SELL-ORDER-AMOUNT-CHANGED',
+        amount
+    }
+}
+
+export function sellOrderPriceChanged(price) {
+    return {
+        type: 'SELL-ORDR-PRICE-CHANGED',
+        price
+    }
+}
+
+export function buyOrderPriceChanged(price) {
+    return {
+        type: 'BUY-ORDER-PRICE-CHANGED',
+        price
+    }
+}
+        
+export function orderMade() {
+    return {
+        type: 'ORDER-MADE'
+    }
+}
+
+export function buyOrder() {
+    return {
+        type: 'BUY-ORDER'
+    }
+}
+
+export function sellOrder() {
+    return {
+        type: 'SELL-ORDER'
+    }
+}

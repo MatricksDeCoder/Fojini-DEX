@@ -74,7 +74,7 @@ const showForm = (props) => {
 
         <form className="row" onSubmit={(event) => {
           event.preventDefault()
-          depositEther(dispatch, exchange, web3, etherDepositAmount, account)
+          depositEther(dispatch, web3, exchange, etherDepositAmount, account)
         }}>
           <div className="col-12 col-sm pr-sm-2">
             <input
@@ -139,7 +139,7 @@ const showForm = (props) => {
 
         <form className="row" onSubmit={(event) => {
           event.preventDefault()
-          withdrawEther(dispatch, exchange, web3, etherWithdrawAmount, account)
+          withdrawEther(dispatch, web3, exchange, etherWithdrawAmount, account)
         }}>
           <div className="col-12 col-sm pr-sm-2">
             <input

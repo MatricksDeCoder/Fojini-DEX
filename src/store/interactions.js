@@ -153,7 +153,7 @@ export const loadAllOrders = async (exchangeContract, dispatch) => {
   }
  
   //depositing and withdrawing tokena and ether
-  export const depositEther = (dispatch, web3, exchange, etherDepositAmount, account) => {
+   export const depositEther = (dispatch, web3, exchange, etherDepositAmount, account) => {
     
     const amount  = web3.utils.toWei(etherDepositAmount, 'ether');
     exchange.methods.depositEther().send({from:account, value: amount }).on('transactionHash', (hash) => {

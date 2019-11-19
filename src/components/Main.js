@@ -12,12 +12,17 @@ import {loadAllOrders, subscribeToEvents} from '../store/interactions';
 class Main extends Component {
 
   componentWillMount() {
-    this.loadBlockchainData();
+
+    this.loadBlockchainData(this.props);
+
   }
 
-  async loadBlockchainData() {
-    await loadAllOrders(this.props.exchangeContract);
-    await subscribeToEvents(this.props.dispatch, this.props.exchangeContract);
+  async loadBlockchainData(props) {
+
+    const {exchangeContract, dispatch} = props;
+    await loadAllOrders(exchangeContract);
+    await subscribeToEvents(dispatch, exchangeContract);
+
   }
 
   render() {

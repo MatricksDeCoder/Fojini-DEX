@@ -2,24 +2,28 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Tabs, Tab } from 'react-bootstrap'
 import Spinner from './Spinner'
+
 import { accountSelector, 
          web3Selector,
          exchangeContractSelector,
          tokenContractSelector,
          buyOrderSelector,
          sellOrderSelector } from '../store/selectors'
+
 import {
   buyOrderAmountChanged,
   sellOrderAmountChanged,
   buyOrderPriceChanged,
   sellOrderPriceChanged
 } from '../store/actions'
+
 import {
   makeBuyOrder,
   makeSellOrder
 } from '../store/interactions'
 
 const showForm = (props) => {
+
   const {
     dispatch,
     buyOrder,

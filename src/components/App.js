@@ -13,20 +13,7 @@ import {
 
 class App extends Component {
   
-  constructor(props) {
-
-    super(props);
-    this.state = {
-      account:'',
-      totalSupplyToken:'',
-      exchangeContract:'',
-      tokenContract: '',
-      loading:false
-    }
-
-  };
-
-  async componentWillMount() {
+ async componentWillMount() {
 
     this.loadBlockchainData(this.props.dispatch);
     
@@ -55,16 +42,10 @@ class App extends Component {
 
   render() {
     return (
-    <div >
-      <Navbar account = {this.state.account} />
-      <div className = 'container mt-5'>
-        <div className = 'row'>
-          <main role='main' className = 'col-lg-12 d-flex'>
-            {this.props.contractsLoaded ? <Main  /> : <div className = ''>Loading</div> }   
-          </main>
-        </div>  
-      </div >
-    </div>
+      <div>
+        <Navbar />
+        { this.props.contractsLoaded ? <Main /> : <div className="content"></div> }
+      </div>
     );
   }
 }

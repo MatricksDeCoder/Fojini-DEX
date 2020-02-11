@@ -1,8 +1,8 @@
 require('babel-register');
 require('babel-polyfill');
 require('dotenv').config(); //inject environment variables into truffle project
-const HDWalletProvider  = require(“truffle-hdwallet-provider”);
-const PRIVATE_KEYS      = process.env.PRIVATE_KEYS;
+const HDWalletProvider  = require('truffle-hdwallet-provider-privkey');
+const PRIVATE_KEYS      = process.env.PRIVATE_KEYS  || '';
 const INFURA_API_KEY    = process.env.INFURA_API_KEY;
 
 module.exports = {
@@ -14,10 +14,10 @@ module.exports = {
     },
     rinkeby: {
       provider: function() {
-        return new HDWalletProvider(privateKeys.split(','), `https://rinkeby.infura.io/v3/${INFURA_API_KEY}`);
+        return new HDWalletProvider(PRIVATE_KEYS.split(','), `https://rinkeby.infura.io/v3/${INFURA_API_KEY}`);
       },
-      network_id: 4,
-      gasPrice: 20000000000,
+      network_id: 42,
+      gasPrice: 25000000000,
       gas: 3716887
     },
   },

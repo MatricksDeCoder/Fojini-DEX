@@ -11,6 +11,8 @@ import {
           contractsLoadedSelector,
        } from '../store/selectors'
 
+//relook components 
+
 class App extends Component {
   
  async componentWillMount() {

@@ -11,7 +11,7 @@ console.log(dummyData);
 const priceSymbol = (lastPriceChange) => {
   let output
   if(lastPriceChange === '+') {
-    output = <span className="text-success">&#9650;</span> // Green up tiangle
+    output = <span className="text-success">&#9650;</span> // Green up triangle
   } else {
     output = <span className="text-danger">&#9660;</span> // Red down triangle
   }

@@ -3,18 +3,20 @@ import { connect } from 'react-redux'
 import { Tabs, Tab } from 'react-bootstrap'
 import Spinner from './Spinner'
 
-import { accountSelector, 
-         web3Selector,
-         exchangeContractSelector,
-         tokenContractSelector,
-         buyOrderSelector,
-         sellOrderSelector } from '../store/selectors'
+import {
+  exchangeSelector,
+  tokenSelector,
+  accountSelector,
+  web3Selector,
+  buyOrderSelector,
+  sellOrderSelector
+} from '../store/selectors'
 
 import {
   buyOrderAmountChanged,
-  sellOrderAmountChanged,
   buyOrderPriceChanged,
-  sellOrderPriceChanged
+  sellOrderAmountChanged,
+  sellOrderPriceChanged,
 } from '../store/actions'
 
 import {
@@ -112,6 +114,7 @@ const showForm = (props) => {
       </Tab>
     </Tabs>
   )
+
 }
 
 class NewOrder extends Component {
@@ -132,22 +135,21 @@ class NewOrder extends Component {
 
 function mapStateToProps(state) {
 
-  const buyOrder = buyOrderSelector(state);
-  const sellOrder = sellOrderSelector(state);
-  const showBuyTotal = buyOrder.amount && buyOrder.price;
-  const showSellTotal = sellOrder.amount && sellOrder.price;
+  const buyOrder = buyOrderSelector(state)
+  const sellOrder = sellOrderSelector(state)
 
   return {
     account: accountSelector(state),
-    exchange: exchangeContractSelector(state),
-    token: tokenContractSelector(state),
+    exchange: exchangeSelector(state),
+    token: tokenSelector(state),
     web3: web3Selector(state),
     buyOrder,
     sellOrder,
-    showForm: !buyOrder && !sellOrder,
-    showBuyTotal,
-    showSellTotal,
+    showForm: !buyOrder.making && !sellOrder.making,
+    showBuyTotal: buyOrder.amount && buyOrder.price,
+    showSellTotal: sellOrder.amount && sellOrder.price
   }
+  
 }
 
 export default connect(mapStateToProps)(NewOrder)

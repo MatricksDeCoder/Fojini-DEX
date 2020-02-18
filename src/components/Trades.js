@@ -1,11 +1,17 @@
-import React, { Component } from 'react';import { connect } from 'react-redux';
-import {tradesSelector, tradesLoadedSelector} from '../store/selectors';
-import Spinner from './Spinner';
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import Spinner from './Spinner'
 
-const showTrades = (trades) => {
+import {
+  filledOrdersLoadedSelector,
+  filledOrdersSelector
+} from '../store/selectors'
+
+const showFilledOrders = (filledOrders) => {
+
   return(
     <tbody>
-      { trades.map((order) => {
+      { filledOrders.map((order) => {
         return(
           <tr className={`order-${order.id}`} key={order.id}>
             <td className="text-muted">{order.formattedTimestamp}</td>
@@ -16,7 +22,9 @@ const showTrades = (trades) => {
       }) }
     </tbody>
   )
+
 }
+
 class Trades extends Component {
 
   render() {
@@ -31,25 +39,27 @@ class Trades extends Component {
               <thead>
                 <tr>
                   <th>Time</th>
-                  <th>DEXED</th>
-                  <th>DEXED/ETH</th>
+                  <th>DAPP</th>
+                  <th>DAPP/ETH</th>
                 </tr>
               </thead>
-              {this.props.tradesLoaded? showTrades(this.props.trades) : <Spinner type ="table"/>}
+              { this.props.filledOrdersLoaded ? showFilledOrders(this.props.filledOrders) : <Spinner type="table" />}
             </table>
           </div>
         </div>
       </div>
     )
   }
-  
+
 }
 
 function mapStateToProps(state) {
-  return { 
-    trades: tradesSelector(state)  || [{a:1,b:2, id:1}],
-    tradesLoaded: tradesLoadedSelector(state)
-  };
+
+  return {
+    filledOrdersLoaded: filledOrdersLoadedSelector(state),
+    filledOrders: filledOrdersSelector(state),
+  }
+
 }
 
-export default connect(mapStateToProps)(Trades);
+export default connect(mapStateToProps)(Trades)

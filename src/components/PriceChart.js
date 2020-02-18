@@ -1,35 +1,41 @@
-import React, { Component } from "react";
-import Chart from "react-apexcharts";
-import {connect} from 'react-redux';
-import Spinner from './Spinner';
-import {priceChartLoadedSelector, priceChartSelector}   from '../store/selectors';
-import { chartOptions, dummyData } from './PriceChart.config';
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import Chart from 'react-apexcharts'
+import Spinner from './Spinner'
+import { chartOptions } from './PriceChart.config'
 
-
-console.log(dummyData);
+import {
+  priceChartLoadedSelector,
+  priceChartSelector
+} from '../store/selectors'
 
 const priceSymbol = (lastPriceChange) => {
+
   let output
   if(lastPriceChange === '+') {
-    output = <span className="text-success">&#9650;</span> // Green up triangle
+    output = <span className="text-success">&#9650;</span> // indicate up with green triangle
   } else {
-    output = <span className="text-danger">&#9660;</span> // Red down triangle
+    output = <span className="text-danger">&#9660;</span> // indicate down with green triangle 
   }
   return(output)
+
 }
 
 const showPriceChart = (priceChart) => {
+
   return(
     <div className="price-chart">
       <div className="price">
         <h4>DAPP/ETH &nbsp; {priceSymbol(priceChart.lastPriceChange)} &nbsp; {priceChart.lastPrice}</h4>
       </div>
-      <Chart options={chartOptions} series={priceChart.priceSeries} type='candlestick' width='100%' height='100%' />
+      <Chart options={chartOptions} series={priceChart.series} type='candlestick' width='100%' height='100%' />
     </div>
   )
+
 }
 
 class PriceChart extends Component {
+
   render() {
     return (
       <div className="card bg-dark text-white">
@@ -42,6 +48,7 @@ class PriceChart extends Component {
       </div>
     )
   }
+  
 }
 
 function mapStateToProps(state) {

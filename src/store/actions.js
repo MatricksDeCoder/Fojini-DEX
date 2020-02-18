@@ -1,198 +1,217 @@
+// WEB3
 export function web3Loaded(connection) {
-    return {
-        type: 'WEB3_LOADED',
-        connection
-    }
+  return {
+    type: 'WEB3_LOADED',
+    connection
+  }
 }
 
+//Load Account 
 export function web3AccountLoaded(account) {
-    return {
-        type: 'WEB3_ACCOUNT_LOADED',
-        account
-    }
+  return {
+    type: 'WEB3_ACCOUNT_LOADED',
+    account
+  }
 }
 
-export function tokenContractLoaded(tokenContract) {
-    return {
-        type: 'TOKEN_CONTRACT_LOADED',
-        tokenContract
-    }
+// TOKEN Contract 
+export function tokenLoaded(contract) {
+  return {
+    type: 'TOKEN_LOADED',
+    contract
+  }
 }
 
-export function exchangeContractLoaded(exchangeContract) {
-    return {
-        type: 'EXCHANGE_CONTRACT_LOADED',
-        exchangeContract
-    }
+// EXCHANGE Contract 
+export function exchangeLoaded(contract) {
+  return {
+    type: 'EXCHANGE_LOADED',
+    contract
+  }
 }
 
+//Loaded Cancelled Orders 
 export function cancelledOrdersLoaded(cancelledOrders) {
-    return {
-        type: 'CANCELLED_ORDERS_LOADED',
-        cancelledOrders
-    }
+  return {
+    type: 'CANCELLED_ORDERS_LOADED',
+    cancelledOrders
+  }
 }
 
-export function tradesOrdersLoaded(tradesOrders) {
-    return {
-        type: 'TRADES_ORDERS_LOADED',
-        tradesOrders
-    }
+//Loaded Filled Orders
+export function filledOrdersLoaded(filledOrders) {
+  return {
+    type: 'FILLED_ORDERS_LOADED',
+    filledOrders
+  }
 }
 
-export function ordersLoaded(orders) {
-    return {
-        type: 'ORDERS_LOADED',
-        orders
-    }
+//Loaded all orders 
+export function allOrdersLoaded(allOrders) {
+  return {
+    type: 'ALL_ORDERS_LOADED',
+    allOrders
+  }
 }
 
+// Cancel Order
 export function orderCancelling() {
-    return {
-        type: 'ORDER-CANCELLING'
-    }
+  return {
+    type: 'ORDER_CANCELLING'
+  }
 }
 
+//Order cancelled complete 
 export function orderCancelled(order) {
-    return {
-        type: 'ORDER-CANCELLED',
-        order
-    }
+  return {
+    type: 'ORDER_CANCELLED',
+    order
+  }
 }
 
-export function orderTrading() {
-    return {
-        type: 'ORDER-TRADING'
-    }
+// Fill Order
+export function orderFilling() {
+  return {
+    type: 'ORDER_FILLING'
+  }
 }
 
-export function orderTraded(order) {
-    return {
-        type: 'ORDER-TRADED',
-        order
-    }
+//Order filled completed
+export function orderFilled(order) {
+  return {
+    type: 'ORDER_FILLED',
+    order
+  }
 }
 
-export function etherBalanceLoaded(etherBalance) {
-    return {
-        type: 'ETHER-BALANCE-LOADED',
-        etherBalance
-    }
+// Balances ether 
+export function etherBalanceLoaded(balance) {
+  return {
+    type: 'ETHER_BALANCE_LOADED',
+    balance
+  }
 }
 
-export function tokenBalanceLoaded(tokenBalance) {
-    return {
-        type: 'TOKEN-BALANCE-LOADED',
-        tokenBalance
-    }
+// Balances token 
+export function tokenBalanceLoaded(balance) {
+  return {
+    type: 'TOKEN_BALANCE_LOADED',
+    balance
+  }
 }
 
-export function exchangeEtherBalanceLoaded(exchangeEtherBalance) {
-    return {
-        type: 'EXCHANGE-ETHER-BALANCE-LOADED',
-        exchangeEtherBalance
-    }
+// Balance of ether Loaded
+export function exchangeEtherBalanceLoaded(balance) {
+  return {
+    type: 'EXCHANGE_ETHER_BALANCE_LOADED',
+    balance
+  }
 }
 
-export function exchangeTokenBalanceLoaded(exchangeTokenBalance) {
-    return {
-        type: 'EXCHANGE-TOKEN-BALANCE-LOADED',
-        exchangeTokenBalance
-    }
+// Balance of token loaded 
+export function exchangeTokenBalanceLoaded(balance) {
+  return {
+    type: 'EXCHANGE_TOKEN_BALANCE_LOADED',
+    balance
+  }
 }
 
+// All balanced loaded 
+export function balancesLoaded() {
+  return {
+    type: 'BALANCES_LOADED'
+  }
+}
+
+// Balanced loading 
 export function balancesLoading() {
-    return {
-        type: 'BALANCES-LOADING'
-    }
+  return {
+    type: 'BALANCES_LOADING'
+  }
 }
 
-//Triggers that occur when depositing or withdrawing in the form
-//Triggers anytime one of the balances is loading
+// Ether for deposit in form changing  
 export function etherDepositAmountChanged(amount) {
-    return {
-        type: 'ETHER-DEPOSIT-AMOUNT-CHANGED',
-        amount
-    }
+  return {
+    type: 'ETHER_DEPOSIT_AMOUNT_CHANGED',
+    amount
+  }
 }
 
-export function tokenDepositAmountChanged(amount) {
-    return {
-        type: 'TOKEN-DEPOSIT-AMOUNT-CHANGED',
-        amount
-    }
-}
-
+// Ether withdrawal amount in form changin 
 export function etherWithdrawAmountChanged(amount) {
-    return {
-        type: 'ETHER-WITHDRAW-AMOUNT-CHANGED',
-        amount
-    }
+  return {
+    type: 'ETHER_WITHDRAW_AMOUNT_CHANGED',
+    amount
+  }
 }
 
+// Token amount deposit in form changing 
+export function tokenDepositAmountChanged(amount) {
+  return {
+    type: 'TOKEN_DEPOSIT_AMOUNT_CHANGED',
+    amount
+  }
+}
+
+// Token amount withdrawal in form changing 
 export function tokenWithdrawAmountChanged(amount) {
-    return {
-        type: 'TOKEN-WITHDRAW-AMOUNT-CHANGED',
-        amount
-    }
+  return {
+    type: 'TOKEN_WITHDRAW_AMOUNT_CHANGED',
+    amount
+  }
 }
 
-
-export function depositDone(amount) {
-    return {
-        type: 'DEPOSIT-DONE'
-    }
-}
-
-export function withdrawDone(amount) {
-    return {
-        type: 'WTTHDRAW-DONE'
-    }
-}
-
-//Making buy and sell orders
+// Buy order amount in form changing 
 export function buyOrderAmountChanged(amount) {
-    return {
-        type: 'BUY-ORDER-AMOUNT-CHANGED',
-        amount
-    }
+  return {
+    type: 'BUY_ORDER_AMOUNT_CHANGED',
+    amount
+  }
 }
 
-export function sellOrderAmountChanged(amount) {
-    return {
-        type: 'SELL-ORDER-AMOUNT-CHANGED',
-        amount
-    }
-}
-
-export function sellOrderPriceChanged(price) {
-    return {
-        type: 'SELL-ORDR-PRICE-CHANGED',
-        price
-    }
-}
-
+// Buy price amount in form changing 
 export function buyOrderPriceChanged(price) {
-    return {
-        type: 'BUY-ORDER-PRICE-CHANGED',
-        price
-    }
-}
-        
-export function orderMade() {
-    return {
-        type: 'ORDER-MADE'
-    }
+  return {
+    type: 'BUY_ORDER_PRICE_CHANGED',
+    price
+  }
 }
 
-export function buyOrder() {
-    return {
-        type: 'BUY-ORDER'
-    }
+
+export function buyOrderMaking(price) {
+  return {
+    type: 'BUY_ORDER_MAKING'
+  }
 }
 
-export function sellOrder() {
-    return {
-        type: 'SELL-ORDER'
-    }
+// Generic Order
+export function orderMade(order) {
+  return {
+    type: 'ORDER_MADE',
+    order
+  }
+}
+
+// Sell Order
+export function sellOrderAmountChanged(amount) {
+  return {
+    type: 'SELL_ORDER_AMOUNT_CHANGED',
+    amount
+  }
+}
+
+// Sell order amount in form changing 
+export function sellOrderPriceChanged(price) {
+  return {
+    type: 'SELL_ORDER_PRICE_CHANGED',
+    price
+  }
+}
+
+
+export function sellOrderMaking(price) {
+  return {
+    type: 'SELL_ORDER_MAKING'
+  }
 }

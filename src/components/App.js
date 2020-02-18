@@ -1,39 +1,42 @@
-import React, { Component } from 'react';
-import {connect} from 'react-redux';
-import './App.css';
-import Main from './Main';
-import Navbar from './Navbar';
-import {loadWeb3, 
-        loadWeb3Account, 
-        loadTokenContract,
-        loadExchangeContract} from '../store/interactions';
-import {
-          contractsLoadedSelector,
-       } from '../store/selectors'
- 
-class App extends Component {
-  
- async componentWillMount() {
+import React, { Component } from 'react'
+import './App.css'
+import Navbar from './Navbar'
+import Main from './Main'
+import { connect } from 'react-redux'
 
-    this.loadBlockchainData(this.props.dispatch);
-    
+import {
+  loadWeb3,
+  loadAccount,
+  loadToken,
+  loadExchange
+} from '../store/interactions'
+
+import { contractsLoadedSelector } from '../store/selectors'
+
+class App extends Component {
+
+  componentWillMount() {
+    //load blockchain data required by components on mount 
+    this.loadBlockchainData(this.props.dispatch)
+
   }
 
   async loadBlockchainData(dispatch) {
 
-    const web3             = loadWeb3(dispatch);
-    await web3.eth.net.getNetworkType();
-    const networkId        = await web3.eth.net.getId();
-    await loadWeb3Account(web3, dispatch);
+    const web3 = loadWeb3(dispatch)
+    await web3.eth.net.getNetworkType()
+    const networkId = await web3.eth.net.getId()
+    await loadAccount(web3, dispatch)
+    const token = await loadToken(web3, networkId, dispatch)
 
-    const tokenContract    = await loadTokenContract(web3, networkId, dispatch);    
-    if(!tokenContract) {
+    if(!token) {
       window.alert('Token smart contract not detected on the current network. Please select another network with Metamask.')
       return
     }
 
-    const exchangeContract = await loadExchangeContract(web3, networkId,dispatch);
-    if(!exchangeContract) {
+    const exchange = await loadExchange(web3, networkId, dispatch)
+
+    if(!exchange) {
       window.alert('Exchange smart contract not detected on the current network. Please select another network with Metamask.')
       return
     }
@@ -41,20 +44,23 @@ class App extends Component {
   }
 
   render() {
+
     return (
       <div>
         <Navbar />
         { this.props.contractsLoaded ? <Main /> : <div className="content"></div> }
       </div>
     );
+
   }
 }
 
 function mapStateToProps(state) {
+
   return {
-    contractsLoaded:contractsLoadedSelector(state)
+    contractsLoaded: contractsLoadedSelector(state)
   }
+
 }
 
-export default connect(mapStateToProps)(App);
-
+export default connect(mapStateToProps)(App) //Higher order component 

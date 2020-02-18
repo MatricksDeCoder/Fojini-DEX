@@ -1,28 +1,23 @@
-import React, { Component } from 'react';
-import Balance from './Balance';
-import NewOrder from './NewOrder';
-import OrderBook from './OrderBook';
-import PriceChart from './PriceChart';
-import MyTransactions from './MyTransactions';
-import Trades from './Trades';
-import {connect} from 'react-redux';
-import {exchangeContractSelector} from '../store/selectors';
-import {loadAllOrders, subscribeToEvents} from '../store/interactions';
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { exchangeSelector } from '../store/selectors'
+import { loadAllOrders, subscribeToEvents } from '../store/interactions'
+import OrderBook from './OrderBook'
+import Trades from './Trades'
+import MyTransactions from './MyTransactions'
+import PriceChart from './PriceChart'
+import Balance from './Balance'
+import NewOrder from './NewOrder'
 
-class Main extends Component {
-
+class Content extends Component {
   componentWillMount() {
-
-    this.loadBlockchainData(this.props);
-
+    this.loadBlockchainData(this.props)
   }
 
   async loadBlockchainData(props) {
-
-    const {exchangeContract, dispatch} = props;
-    await loadAllOrders(exchangeContract);
-    await subscribeToEvents(dispatch, exchangeContract);
-
+    const { dispatch, exchange } = props
+    await loadAllOrders(exchange, dispatch)
+    await subscribeToEvents(exchange, dispatch)
   }
 
   render() {
@@ -39,14 +34,14 @@ class Main extends Component {
         </div>
         <Trades />
       </div>
-    );
+    )
   }
 }
 
 function mapStateToProps(state) {
   return {
-      exchangeContract: exchangeContractSelector(state)
+    exchange: exchangeSelector(state)
   }
 }
 
-export default connect(mapStateToProps)(Main);
+export default connect(mapStateToProps)(Content)

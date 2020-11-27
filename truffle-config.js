@@ -1,0 +1,36 @@
+require('babel-register');
+require('babel-polyfill');
+require('dotenv').config(); //inject environment variables into truffle project
+
+const HDWalletProvider  = require('truffle-hdwallet-provider-privkey');
+const PRIVATE_KEYS      = process.env.PRIVATE_KEYS  || '';
+const INFURA_API_KEY    = process.env.INFURA_API_KEY;
+
+module.exports = {
+  networks: {
+    development: {
+      networkCheckTimeout: 100000,
+      host: "127.0.0.1",
+      port: 8545,
+      network_id: "*" // Match any network id
+    },
+    rinkeby: {
+      networkCheckTimeout: 100000,
+      provider: function() {
+        return new HDWalletProvider(PRIVATE_KEYS.split(','), `https://rinkeby.infura.io/v3/${INFURA_API_KEY}`);
+      },
+      network_id: 4,
+      gas: 5500000
+    },
+  },
+  contracts_directory: './src/contracts/',
+  contracts_build_directory: './src/abis/',
+  compilers: {
+    solc: {
+      optimizer: {
+        enabled: true,
+        runs: 200
+      }
+    }
+  }
+}

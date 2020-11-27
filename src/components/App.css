@@ -1,0 +1,155 @@
+.content  {
+  background-color: #1d1d1d;
+  position: absolute;
+  top: 56px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  justify-content: space-evenly;
+  padding: 8px;
+  z-index: 1
+}
+
+.content > div {
+  width: 20%;
+  padding-right: 8px
+}
+
+.content > div:first-child {
+  min-width: 220px
+}
+
+.content > div:nth-child(2) {
+  min-width: 200px
+}
+
+.content  div:nth-child(3) {
+  width: 40%
+}
+
+.content > div:last-child {
+  padding-right: 0;
+  min-width: 240px
+}
+
+@media (max-width:992px) {
+  .content {
+    display: block;
+    overflow-y: auto
+  }
+
+  .content > div {
+    width: 100%!important;
+    padding-right: 0;
+    padding-bottom: 8px
+  }
+}
+
+.vertical > div {
+  height: 100%
+}
+
+.vertical-split {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: space-evenly;
+  flex-wrap: nowrap
+}
+
+.vertical-split > div {
+  height: 50%
+}
+
+.vertical-split > div:first-child {
+  margin-bottom: 8px
+}
+
+.vertical-split:last-child > div:first-child {
+  height: 60%
+}
+
+.vertical-split:last-child > div:last-child {
+  height: 40%
+}
+
+@media (max-width:992px) {
+  .vertical-split {
+    display: block
+  }
+  .vertical-split > div,
+  .vertical-split > div:first-child {
+    height: auto
+  }
+}
+
+.card {
+  border-radius: 0px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: space-evenly;
+  flex-wrap: nowrap;
+}
+
+.card-header {
+  padding: 8px 4px;
+}
+
+.card-body{
+  flex: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: relative;
+  padding: 2px;
+}
+
+.card-body th {
+  border-top: 0;
+}
+
+.card-body .nav-tabs {
+  border-color: #95999c;
+}
+
+.card-body .nav-item.nav-link {
+  font-size: 80%;
+  font-weight: bold;
+  background-color: inherit;
+  color: inherit;
+  padding: 4px 8px;
+  border-top: 0px;
+  border-right: 0px;
+  border-left: 0px;
+  border-color: #95999c;
+  border-radius: 0px;
+}
+
+.card-body .nav-item.nav-link.active {
+  border-top: 0px;
+  border-right: 0px;
+  border-left: 0px;
+  border-bottom: 1px solid #007bff;
+}
+
+.card-body .price-chart {
+  height:100%;
+  padding-bottom: 60px;
+}
+
+.card-body .price-chart .price {
+  padding-left: 20px;
+}
+
+td.cancel-order {
+  cursor: pointer;
+}
+
+tr.order-book-order {
+  cursor: pointer;
+}
+

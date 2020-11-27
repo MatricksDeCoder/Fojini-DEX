@@ -1,0 +1,4 @@
+Contract                 Network          Address
+Token                    Rinkeby
+Exchange                 Rinkeby 
+Rhombus/Lighthouse       Rinkeby         0x613D2159db9ca2fBB15670286900aD6c1C79cC9a

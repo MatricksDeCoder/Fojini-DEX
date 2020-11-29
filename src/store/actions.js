@@ -1,4 +1,4 @@
-// WEB3
+// Load WEB3 to state
 export function web3Loaded(connection) {
   return {
     type: 'WEB3_LOADED',
@@ -6,7 +6,7 @@ export function web3Loaded(connection) {
   }
 }
 
-//Load Account 
+// Load IUser Account to state
 export function web3AccountLoaded(account) {
   return {
     type: 'WEB3_ACCOUNT_LOADED',
@@ -14,7 +14,7 @@ export function web3AccountLoaded(account) {
   }
 }
 
-// TOKEN Contract 
+// Load FOJINI TOKEN Contract to state
 export function tokenLoaded(contract) {
   return {
     type: 'TOKEN_LOADED',
@@ -22,7 +22,7 @@ export function tokenLoaded(contract) {
   }
 }
 
-// EXCHANGE Contract 
+// Load FOJINI EXCHANGE Contract to state 
 export function exchangeLoaded(contract) {
   return {
     type: 'EXCHANGE_LOADED',
@@ -30,7 +30,7 @@ export function exchangeLoaded(contract) {
   }
 }
 
-//Loaded Cancelled Orders 
+//Load All the Cancelled Orders 
 export function cancelledOrdersLoaded(cancelledOrders) {
   return {
     type: 'CANCELLED_ORDERS_LOADED',
@@ -38,7 +38,7 @@ export function cancelledOrdersLoaded(cancelledOrders) {
   }
 }
 
-//Loaded Filled Orders
+//Load All the Filled Orders(Trades)
 export function filledOrdersLoaded(filledOrders) {
   return {
     type: 'FILLED_ORDERS_LOADED',
@@ -46,7 +46,7 @@ export function filledOrdersLoaded(filledOrders) {
   }
 }
 
-//Loaded all orders 
+//Load all orders (open orders)
 export function allOrdersLoaded(allOrders) {
   return {
     type: 'ALL_ORDERS_LOADED',
@@ -54,14 +54,14 @@ export function allOrdersLoaded(allOrders) {
   }
 }
 
-// Cancel Order
+//Load that an existing order is cancelling
 export function orderCancelling() {
   return {
     type: 'ORDER_CANCELLING'
   }
 }
 
-//Order cancelled complete 
+//Order cancelled 
 export function orderCancelled(order) {
   return {
     type: 'ORDER_CANCELLED',
@@ -69,7 +69,7 @@ export function orderCancelled(order) {
   }
 }
 
-// Fill Order
+// Load that an existing order is filling
 export function orderFilling() {
   return {
     type: 'ORDER_FILLING'
@@ -130,7 +130,7 @@ export function balancesLoading() {
   }
 }
 
-// Ether for deposit in form changing  
+// Ether for deposit  
 export function etherDepositAmountChanged(amount) {
   return {
     type: 'ETHER_DEPOSIT_AMOUNT_CHANGED',
@@ -138,7 +138,7 @@ export function etherDepositAmountChanged(amount) {
   }
 }
 
-// Ether withdrawal amount in form changin 
+// Ether withdrawal amount 
 export function etherWithdrawAmountChanged(amount) {
   return {
     type: 'ETHER_WITHDRAW_AMOUNT_CHANGED',
@@ -146,7 +146,7 @@ export function etherWithdrawAmountChanged(amount) {
   }
 }
 
-// Token amount deposit in form changing 
+// Token amount deposit 
 export function tokenDepositAmountChanged(amount) {
   return {
     type: 'TOKEN_DEPOSIT_AMOUNT_CHANGED',
@@ -170,7 +170,7 @@ export function buyOrderAmountChanged(amount) {
   }
 }
 
-// Buy price amount in form changing 
+// The buy price amount in form changing 
 export function buyOrderPriceChanged(price) {
   return {
     type: 'BUY_ORDER_PRICE_CHANGED',
@@ -178,14 +178,14 @@ export function buyOrderPriceChanged(price) {
   }
 }
 
-
+// The buy order is making
 export function buyOrderMaking(price) {
   return {
     type: 'BUY_ORDER_MAKING'
   }
 }
 
-// Generic Order
+// Order done
 export function orderMade(order) {
   return {
     type: 'ORDER_MADE',
@@ -193,7 +193,7 @@ export function orderMade(order) {
   }
 }
 
-// Sell Order
+// Sell order amount in form changing 
 export function sellOrderAmountChanged(amount) {
   return {
     type: 'SELL_ORDER_AMOUNT_CHANGED',
@@ -201,7 +201,7 @@ export function sellOrderAmountChanged(amount) {
   }
 }
 
-// Sell order amount in form changing 
+// Sell order price in form changing 
 export function sellOrderPriceChanged(price) {
   return {
     type: 'SELL_ORDER_PRICE_CHANGED',
@@ -209,7 +209,7 @@ export function sellOrderPriceChanged(price) {
   }
 }
 
-// Making the sell order 
+// Making sell order 
 export function sellOrderMaking(price) {
   return {
     type: 'SELL_ORDER_MAKING'

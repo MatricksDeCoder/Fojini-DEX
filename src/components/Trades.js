@@ -7,6 +7,7 @@ import {
   filledOrdersSelector
 } from '../store/selectors'
 
+// Table to show filled orders (trades) 
 const showFilledOrders = (filledOrders) => {
 
   return(

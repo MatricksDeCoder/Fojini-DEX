@@ -1,5 +1,5 @@
 {
-  "name": "fojini decentralised exchange",
+  "name": "fojini-dex",
   "version": "0.1.0",
   "description": "Simple Decentralized Ethereum Token Exchange",
   "author": "@Zed_developer @MatricksDeCoder infinitumcubed@gmail.com ",
@@ -29,12 +29,13 @@
     "redux": "^4.0.4",
     "redux-logger": "^3.0.6",
     "reselect": "^4.0.0",
+    "solc": "^0.5.16",
     "solidity-coverage": "0.5.11",
     "truffle": "^5.0.5",
     "truffle-flattener": "^1.4.0",
     "truffle-hdwallet-provider": "1.0.4",
     "truffle-hdwallet-provider-privkey": "1.0.3",
-    "web3": "1.0.0-beta.46"
+    "web3": "^1.2.6"
   },
   "scripts": {
     "start": "react-scripts start",

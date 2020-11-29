@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
 import { OverlayTrigger, Tooltip } from 'react-bootstrap'
 import Spinner from './Spinner'
+import { connect } from 'react-redux'
+
 
 import {
   orderBookSelector,

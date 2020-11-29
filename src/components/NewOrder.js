@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Tabs, Tab } from 'react-bootstrap'
 import Spinner from './Spinner'
+
 import {
   exchangeSelector,
   tokenSelector,
@@ -10,18 +11,21 @@ import {
   buyOrderSelector,
   sellOrderSelector
 } from '../store/selectors'
+
 import {
   buyOrderAmountChanged,
   buyOrderPriceChanged,
   sellOrderAmountChanged,
   sellOrderPriceChanged,
 } from '../store/actions'
+
 import {
   makeBuyOrder,
   makeSellOrder
 } from '../store/interactions'
 
 const showForm = (props) => {
+  
   const {
     dispatch,
     buyOrder,
@@ -129,6 +133,7 @@ class NewOrder extends Component {
 }
 
 function mapStateToProps(state) {
+
   const buyOrder = buyOrderSelector(state)
   const sellOrder = sellOrderSelector(state)
 

@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux';
 
+// Reducer for loading and changing state for web3, account, etherBalance
 function web3(state = {}, action) {
   switch (action.type) {
     case 'WEB3_LOADED':
@@ -13,6 +14,7 @@ function web3(state = {}, action) {
   }
 }
 
+// Reducer for loading and changing state for token,tokenBalance
 function token(state = {}, action) {
   switch (action.type) {
     case 'TOKEN_LOADED':
@@ -24,6 +26,7 @@ function token(state = {}, action) {
   }
 }
 
+// Reducer for loading and changing state for all exchange related 
 function exchange(state = {}, action) {
   let index, data
 
@@ -140,6 +143,7 @@ function exchange(state = {}, action) {
   }
 }
 
+// combine reducers to root to give to store 
 const rootReducer = combineReducers({
   web3,
   token,

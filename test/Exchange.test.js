@@ -1,3 +1,5 @@
+// Run tests seperate eg truffle test ./test/Token.test.js
+// Running all tests eg truffle test may have challenges
 import { tokenFormat, etherFormat, EVM_REVERT, ETHER_ADDRESS } from './helpers'
 
 const Token         = artifacts.require('./Token')
@@ -82,7 +84,7 @@ contract('Exchange', ([deployer, feeAccount, user1, user2]) => {
     beforeEach(async () => {
       // Deposit Ether first
       amount = etherFormat(1)
-      await exchange.depositEther({ from: user1, value: amount })
+      let x = await exchange.depositEther({ from: user1, value: amount })
     })
 
     describe('success', () => {
@@ -109,7 +111,7 @@ contract('Exchange', ([deployer, feeAccount, user1, user2]) => {
 
     describe('failure', () => {
       it('rejects withdraws for insufficient balances', async () => {
-        await exchange.withdrawEther(etherFormat(100), { from: user1 }).should.be.rejectedWith(EVM_REVERT)
+        let z = await exchange.withdrawEther(etherFormat(100), { from: user1 }).should.be.rejectedWith(EVM_REVERT)
       })
     })
   })
@@ -121,7 +123,7 @@ contract('Exchange', ([deployer, feeAccount, user1, user2]) => {
     describe('success', () => {
       beforeEach(async () => {
         amount = tokenFormat(10)
-        await token.approve(exchange.address, amount, { from: user1 })
+        let y = await token.approve(exchange.address, amount, { from: user1 })
         result = await exchange.depositToken(token.address, amount, { from: user1 })
       })
 
@@ -166,8 +168,8 @@ contract('Exchange', ([deployer, feeAccount, user1, user2]) => {
       beforeEach(async () => {
         // Deposit tokens first
         amount = tokenFormat(10)
-        await token.approve(exchange.address, amount, { from: user1 })
-        await exchange.depositToken(token.address, amount, { from: user1 })
+        let j = await token.approve(exchange.address, amount, { from: user1 })
+        let k = await exchange.depositToken(token.address, amount, { from: user1 })
 
         // Withdraw tokens
         result = await exchange.withdrawToken(token.address, amount, { from: user1 })
@@ -204,9 +206,9 @@ contract('Exchange', ([deployer, feeAccount, user1, user2]) => {
   describe('checking balances', () => {
     let amount = tokenFormat(15);
     beforeEach(async () => {
-      await exchange.depositEther({ from: user1, value: etherFormat(1) })
-      await token.approve(exchange.address, amount, {from:user1});
-      await exchange.depositToken(token.address, amount, {from:user1});
+      let m = await exchange.depositEther({ from: user1, value: etherFormat(1) })
+      let n = await token.approve(exchange.address, amount, {from:user1});
+      let a = await exchange.depositToken(token.address, amount, {from:user1});
     })
 
     it('returns user balance', async () => {
@@ -255,28 +257,45 @@ contract('Exchange', ([deployer, feeAccount, user1, user2]) => {
 
     beforeEach(async () => {
       // user1 deposits ether only
-      await exchange.depositEther({ from: user1, value: etherFormat(1) })
+      let b = await exchange.depositEther({ from: user1, value: etherFormat(1) })
       // deployer give tokens to user2
-      await token.transfer(user2, tokenFormat(100), { from: deployer })
+      let c = await token.transfer(user2, tokenFormat(100), { from: deployer })
       // user2 deposits tokens only
-      await token.approve(exchange.address, tokenFormat(2), { from: user2 })
-      await exchange.depositToken(token.address, tokenFormat(2), { from: user2 })
+      let d = await token.approve(exchange.address, tokenFormat(2), { from: user2 })
+      let e = await exchange.depositToken(token.address, tokenFormat(2), { from: user2 })
       // user1 makes an order to buy tokens with Ether
-      await exchange.makeOrder(token.address, tokenFormat(1), ETHER_ADDRESS, etherFormat(1), { from: user1 })
+      let f = await exchange.makeOrder(token.address, tokenFormat(1), ETHER_ADDRESS, etherFormat(1), { from: user1 })
     })
 
     describe('filling orders', () => {
       let result 
 
+      let isLucky
       describe('success', () => {
         beforeEach(async () => {
           // user2 fills order
-          result = await exchange.fillOrder('1', { from: user2 })
-          console.log('==================================')
-          console.log(result.logs[0])
-          console.log(result.logs[0].event)
-          console.log('==================================')
+          result  = await exchange.fillOrder('1', { from: user2 })
+          isLucky   = result.logs[0].args.isLucky
+          
         })
+
+        
+        it('emits a "Trade" event', () => {
+          console.log("=====Is this a lucky Trade=====")
+          console.log(isLucky)
+          const log = result.logs[0]
+          log.event.should.eq('Trade')
+          const event = log.args
+          event.id.toString().should.equal('1', 'id is correct')
+          event.user.should.equal(user1, 'user is correct')
+          event.tokenGet.should.equal(token.address, 'tokenGet is correct')
+          event.amountGet.toString().should.equal(tokenFormat(1).toString(), 'amountGet is correct')
+          event.tokenGive.should.equal(ETHER_ADDRESS, 'tokenGive is correct')
+          event.amountGive.toString().should.equal(etherFormat(1).toString(), 'amountGive is correct')
+          event.userFill.should.equal(user2, 'userFill is correct')
+          event.timestamp.toString().length.should.be.at.least(1, 'timestamp is present')
+        })
+
         //user2 should receive 1% less if fee charged when filling the order
         it('executes the trade & may charges fees', async () => {
           let balance
@@ -286,22 +305,16 @@ contract('Exchange', ([deployer, feeAccount, user1, user2]) => {
           balance.toString().should.equal(etherFormat(1).toString(), 'user2 received Ether')
           balance = await exchange.balanceOf(ETHER_ADDRESS, user1)
           balance.toString().should.equal('0', 'user1 Ether deducted')
-          if(!result) { 
+
+          if(isLucky) { 
             // user2 will not pay fees 
             balance = await exchange.balanceOf(token.address, user2)
             balance.toString().should.equal(tokenFormat(1).toString(), 'user2 tokens deducted with fee applied')
             const feeAccount = await exchange.feeAccount()
             balance = await exchange.balanceOf(token.address, feeAccount)
             balance.toString().should.equal(tokenFormat(0).toString(), 'feeAccount received fee')
-            // isLucky event is emitted
-            const log = result.logs[0]
-            log.event.should.eq('Order')
-            const event = log.args
-            event.orderId.toString().should.equal('1', 'id is correct')
-            event.user.should.equal(user2, 'user is correct')
-            event.isLucky.should.equal(true, 'tokenGet is correct')
           } else { 
-            // user2 will pay fees and there is not Lucky event emitted
+            // user2 will pay fees
             balance = await exchange.balanceOf(token.address, user2)
             balance.toString().should.equal(tokenFormat(0.99).toString(), 'user2 tokens deducted with fee applied')
             const feeAccount = await exchange.feeAccount()
@@ -317,20 +330,7 @@ contract('Exchange', ([deployer, feeAccount, user1, user2]) => {
           const orderFilledCount = await exchange.filledOrderCount()
           orderFilledCount.toString().should.equal('1')
         })
-
-        it('emits a "Trade" event', () => {
-          const log = result.logs[0]
-          log.event.should.eq('Trade')
-          const event = log.args
-          event.id.toString().should.equal('1', 'id is correct')
-          event.user.should.equal(user1, 'user is correct')
-          event.tokenGet.should.equal(token.address, 'tokenGet is correct')
-          event.amountGet.toString().should.equal(tokenFormat(1).toString(), 'amountGet is correct')
-          event.tokenGive.should.equal(ETHER_ADDRESS, 'tokenGive is correct')
-          event.amountGive.toString().should.equal(etherFormat(1).toString(), 'amountGive is correct')
-          event.userFill.should.equal(user2, 'userFill is correct')
-          event.timestamp.toString().length.should.be.at.least(1, 'timestamp is present')
-        })
+      
       })
 
       describe('failure', () => {
@@ -357,11 +357,11 @@ contract('Exchange', ([deployer, feeAccount, user1, user2]) => {
     })
 
     describe('cancelling orders', () => {
-      let result
+      let outcome
 
       describe('success', async () => {
         beforeEach(async () => {
-          result = await exchange.cancelOrder('1', { from: user1 })
+          outcome = await exchange.cancelOrder('1', { from: user1 })
         })
 
         it('updates cancelled orders', async () => {
@@ -372,7 +372,7 @@ contract('Exchange', ([deployer, feeAccount, user1, user2]) => {
         })
 
         it('emits a "Cancel" event', () => {
-          const log = result.logs[0]
+          const log = outcome.logs[0]
           log.event.should.eq('Cancel')
           const event = log.args
           event.id.toString().should.equal('1', 'id is correct')
@@ -393,7 +393,7 @@ contract('Exchange', ([deployer, feeAccount, user1, user2]) => {
 
         it('rejects unauthorized cancelations', async () => {
           // Try to cancel the order from user1 who did not create order 
-          await exchange.cancelOrder('1', { from: user2 }).should.be.rejectedWith(EVM_REVERT)
+          exchange.cancelOrder('1', { from: user2 }).should.be.rejectedWith(EVM_REVERT)
         })
       })
     })
@@ -405,14 +405,14 @@ contract('Exchange', ([deployer, feeAccount, user1, user2]) => {
 
     beforeEach(async () => {
         // user1 deposits ether only
-        await exchange.depositEther({ from: user1, value: etherFormat(1) })
+        let aa = await exchange.depositEther({ from: user1, value: etherFormat(1) })
         // deployer give tokens to user2
-        await token.transfer(user2, tokenFormat(100), { from: deployer })
+        let bb = await token.transfer(user2, tokenFormat(100), { from: deployer })
         // user2 deposits tokens only
-        await token.approve(exchange.address, tokenFormat(5), { from: user2 })
-        await exchange.depositToken(token.address, tokenFormat(2), { from: user2 })
+        let cc = await token.approve(exchange.address, tokenFormat(5), { from: user2 })
+        let dd = await exchange.depositToken(token.address, tokenFormat(2), { from: user2 })
         // user1 makes an order to buy tokens with Ether
-        await exchange.makeOrder(token.address, tokenFormat(1), ETHER_ADDRESS, etherFormat(1), { from: user1 })        
+        let ee = await exchange.makeOrder(token.address, tokenFormat(1), ETHER_ADDRESS, etherFormat(1), { from: user1 })        
     })
 
     describe('success', async () => {
@@ -444,7 +444,7 @@ contract('Exchange', ([deployer, feeAccount, user1, user2]) => {
         })
 
         it('it allows cancelling orders', async () => {
-            await exchange.cancelOrder('1', { from: user1 })
+            let ff = await exchange.cancelOrder('1', { from: user1 })
             const orderCancelled = await exchange.orderCancelled(1)
             orderCancelled.should.equal(true)
             const orderCancelledCount = await exchange.cancelledOrderCount()
@@ -453,14 +453,14 @@ contract('Exchange', ([deployer, feeAccount, user1, user2]) => {
         
         it('allows token withdrawals', async () => {
             let amount = tokenFormat(2)
-            await exchange.withdrawToken(token.address, amount, { from: user2 })
+            let gg = await exchange.withdrawToken(token.address, amount, { from: user2 })
             const balance = await exchange.tokens(token.address, user2)
             balance.toString().should.equal('0')
         })
 
         it('allows ETH withdrawals', async () => { 
             let amount = tokenFormat(1)           
-            await exchange.withdrawEther(amount, { from: user1 })
+            let kk = await exchange.withdrawEther(amount, { from: user1 })
             const balance = await exchange.tokens(ETHER_ADDRESS, user1)
             balance.toString().should.equal('0')
         })
@@ -519,11 +519,11 @@ contract('Exchange', ([deployer, feeAccount, user1, user2]) => {
 
     describe('failure', () => {
 
-      it('rejects emergency anyone not admin', () => {
+      it('rejects emergency anyone not admin eg user1', () => {
         exchange.stopExchange({ from: user1 }).should.be.rejectedWith(EVM_REVERT)
       })
 
-      it('rejects emergency anyone not admin', () => {
+      it('rejects emergency anyone not admin eg user2', () => {
         exchange.stopExchange({ from: user2 }).should.be.rejectedWith(EVM_REVERT)
       })
 

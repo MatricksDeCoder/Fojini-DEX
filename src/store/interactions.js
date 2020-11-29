@@ -1,4 +1,5 @@
 import Web3 from 'web3'
+
 import {
   web3Loaded,
   web3AccountLoaded,
@@ -24,13 +25,16 @@ import {
   exchangeStarted,
   adminAccountLoaded
 } from './actions'
+
 import Token from '../abis/Token.json'
 import Exchange from '../abis/Exchange.json'
 import { ETHER_ADDRESS } from '../helpers'
 
 export const loadWeb3 = async (dispatch) => {
-  if(typeof window.ethereum!=='undefined'){
-    const web3 = new Web3(window.ethereum)
+  if(typeof window.ethereum  !== 'undefined'){
+    let web3 = new Web3(window.ethereum)
+    // Request account access if needed
+    await window.ethereum.enable();
     dispatch(web3Loaded(web3))
     return web3
   } else {
@@ -39,7 +43,9 @@ export const loadWeb3 = async (dispatch) => {
   }
 }
 
+
 export const loadAccount = async (web3, dispatch) => {
+  
   const accounts = await web3.eth.getAccounts()
   const account = accounts[0]
   dispatch(web3AccountLoaded(account))
@@ -92,6 +98,7 @@ export const loadAllOrders = async (exchange, dispatch) => {
 }
 
 export const subscribeToEvents = async (exchange, dispatch) => {
+  
   exchange.events.Cancel({}, (error, event) => {
     dispatch(orderCancelled(event.returnValues))
   })
@@ -138,7 +145,7 @@ export const fillOrder = (dispatch, exchange, order, account) => {
 export const loadBalances = async (dispatch, web3, exchange, token, account) => {
   if(typeof account !== 'undefined') {
       // Ether balance in wallet
-      const etherBalance = await web3.eth.getBalance(account)
+      let etherBalance = await web3.eth.getBalance(account)
       dispatch(etherBalanceLoaded(etherBalance))
 
       // Token balance in wallet
@@ -242,7 +249,7 @@ export const makeSellOrder = (dispatch, exchange, token, web3, order, account) =
 }
 
 // start emergency or stop emergency by Admins only in event challenges exchange eg bugs, etc 
-export const stopExchange = (dispatch, exchange) => {
+export const stopExchange = (dispatch, exchange, account) => {
  
   exchange.methods.stopExchange().send({ from: account })
   .on('transactionHash', (hash) => {    
@@ -255,7 +262,9 @@ export const stopExchange = (dispatch, exchange) => {
   })
 }
 
-export const startExchange = (dispatch, exchange) => {
+
+// stop emergency by admin 
+export const startExchange = (dispatch, exchange, account) => {
  
   exchange.methods.startExchange().send({ from: account })
   .on('transactionHash', (hash) => {
@@ -270,7 +279,9 @@ export const startExchange = (dispatch, exchange) => {
 
 //load admin account 
 export const loadAdminAccount = async (exchange, dispatch) => {
-  const adminAccount = await exchange.admin()
+  
+  const adminAccount = await exchange.methods.admin().call()
   dispatch(adminAccountLoaded(adminAccount))
   return adminAccount
+
 }

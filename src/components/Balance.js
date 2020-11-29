@@ -214,6 +214,8 @@ class Balance extends Component {
 
 function mapStateToProps(state) {
 
+  const balancesLoading = balancesLoadingSelector(state)
+  
   return {
     account: accountSelector(state),
     exchange: exchangeSelector(state),
@@ -223,7 +225,7 @@ function mapStateToProps(state) {
     tokenBalance: tokenBalanceSelector(state),
     exchangeEtherBalance: exchangeEtherBalanceSelector(state),
     exchangeTokenBalance: exchangeTokenBalanceSelector(state),
-    balancesLoading: balancesLoadingSelector(state),
+    balancesLoading: balancesLoading,
     showForm: !balancesLoading,
     etherDepositAmount: etherDepositAmountSelector(state),
     etherWithdrawAmount: etherWithdrawAmountSelector(state),

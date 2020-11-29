@@ -13,9 +13,11 @@ const priceSymbol = (lastPriceChange) => {
 
   let output
   if(lastPriceChange === '+') {
-    output = <span className="text-success">&#9650;</span> // indicate up with green triangle
+    output = <span className="text-success">&#9650;</span> 
+    // up green triangle
   } else {
-    output = <span className="text-danger">&#9660;</span> // indicate down with green triangle 
+    output = <span className="text-danger">&#9660;</span>    
+    // down red triangle 
   }
   return(output)
 

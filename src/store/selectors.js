@@ -36,7 +36,7 @@ export const isEmergencySelector = createSelector(emergency, e => e)
 
 // Selectors to get the adminsAccount
 const admin = state => get(state, 'exchange.adminAccount')
-export const adminSelector = createSelector(admin, e => e)
+export const adminAccountSelector = createSelector(admin, e => e)
 
 export const contractsLoadedSelector = createSelector(
   tokenLoaded,

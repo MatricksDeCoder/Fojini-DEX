@@ -50,6 +50,8 @@ $ cd Fojini-DEX
     index.js
   * tests
 
+You will need earlier versions of node e.g 8.10.0 was used 
+
 Install dependancies
 ```sh
 $ npm install 
@@ -61,11 +63,14 @@ $ ganache-cli
 ```
 Connect your ganache addresses from list of given addresses to Metamask by copying the private key and importing these private keys to Metamask.
 
-Compile, Test and Migrate Contracts 
+Compile, Test and Migrate Contracts on Ganache 
+To deploy to rinkeby use truffle migrate --reset --network rinkeby
+Advisable to rerun ganache-cli before each test
 ```sh
-$ truffle compile
-$ truffle test
-$ truffle migrate --reset
+$ truffle compile --all
+$ truffle test ./test/Token.test.js
+$ truffle test ./test/Exchange.test.js
+$ truffle migrate --reset --network development
 ```
 Load exchange with some initial data, orders, trades, cancels etc 
 ```sh
@@ -74,8 +79,12 @@ $ truffle exec scripts/seed-exchange.js
 
 Run app locally 
 ```sh
-$ npm start
+$ npm run start
 ```
+
+To interact with contracts, exchange with Metamask you need Metamask installed
+If using ganache copy private key from ganache cli to Metmask
+If want to interact with deployed contracts on other networks not local switch network on Metamask 
 
 ### Other documents for project
 
@@ -90,9 +99,9 @@ $ npm start
  - Add more Etheruem tokens to trade
  - Extend the Fojini token
  - Make contract upgradeable
- - Explore protocols like 0x for liquidity 
+ - Explore protocols like 0x etc 
  - Explore more DEFI intergration e.g Compound
- - Explore more complex orders and executions on exchange 
+ - Explore more complex orders, matching etc and executions on exchange
  - Routing on front end eg Admin  panel to show status exchange,execute emergency etc 
 
 License

@@ -17,53 +17,52 @@ import { contractsLoadedSelector } from '../store/selectors'
 class App extends Component {
 
   componentWillMount() {
-    //load blockchain data required by components on mount 
     this.loadBlockchainData(this.props.dispatch)
-
   }
 
+  // get blokchain data into redux 
   async loadBlockchainData(dispatch) {
-
-    const web3 = loadWeb3(dispatch)
-    await web3.eth.net.getNetworkType()
+    // load web3
+    const web3      = await loadWeb3(dispatch)
+    // load netId
     const networkId = await web3.eth.net.getId()
-    await loadAccount(web3, dispatch)
-    const token = await loadToken(web3, networkId, dispatch)
+    console.log('NET', networkId)
+    // load user account
+    await loadAccount(web3, dispatch)    
+    // load fojini token 
+    const token   = await loadToken(web3, networkId, dispatch)
 
     if(!token) {
-      window.alert('Token smart contract not detected on the current network. Please select another network with Metamask.')
+      window.alert('Fojini Token smart contract not detected on the current network. Please select another network with Metamask.')
       return
-    }
-
+    } 
+    // load exchange token 
     const exchange = await loadExchange(web3, networkId, dispatch)
 
     if(!exchange) {
-      window.alert('Exchange smart contract not detected on the current network. Please select another network with Metamask.')
+      window.alert('Fojini Exchange smart contract not detected on the current network. Please select another network with Metamask.')
       return
-    } else {
-      await loadAdminAccount(exchange, dispatch)
     }
+    // load adminAccount 
+    const adminAccount = await loadAdminAccount(exchange, dispatch) 
+    console.log('ADMIN ACCOUNT',adminAccount)   
 
   }
 
   render() {
-
     return (
       <div>
         <Navbar />
         { this.props.contractsLoaded ? <Main /> : <div className="content"></div> }
       </div>
     );
-
   }
 }
 
 function mapStateToProps(state) {
-
   return {
     contractsLoaded: contractsLoadedSelector(state)
   }
-
 }
 
-export default connect(mapStateToProps)(App) //Higher order component 
+export default connect(mapStateToProps)(App)

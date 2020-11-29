@@ -82,6 +82,7 @@ contract Exchange {
         uint256 timestamp
     );
     // Event when a trade is done, buy , sell matched
+    // Also returns if the trade was a lucky one, so no fees 
     event Trade(
         uint256 id,
         address user,
@@ -90,7 +91,8 @@ contract Exchange {
         address tokenGive,
         uint256 amountGive,
         address userFill,
-        uint256 timestamp
+        uint256 timestamp, 
+        bool isLucky
     );
 
     //Event when exchange is stopped due to emergency 
@@ -100,8 +102,6 @@ contract Exchange {
     // Event when exchange is restarted after emergency 
     event StartExchange(address admin, 
                         bool isEmergency);
-    // Event if die roll was a 6 or not and so does not charged fees
-    event Lucky(uint256 orderId, address user, bool isLucky);
     // Structs representing an order
     struct _Order {
         uint256 id;
@@ -268,11 +268,10 @@ contract Exchange {
             tokens[_tokenGet][_user] = tokens[_tokenGet][_user].add(_amountGet);
             tokens[_tokenGive][_user] = tokens[_tokenGive][_user].sub(_amountGive);
             tokens[_tokenGive][msg.sender] = tokens[_tokenGive][msg.sender].add(_amountGive);
-            emit Lucky(_orderId, _user, _isLucky);
             // I am thinking In future extend to eg every 100 trade gets eg 1 ETH, share of fees, free trades for next 15 trades etc 
         }
 
-        emit Trade(_orderId, _user, _tokenGet, _amountGet, _tokenGive, _amountGive, msg.sender, now);  
+        emit Trade(_orderId, _user, _tokenGet, _amountGet, _tokenGive, _amountGive, msg.sender, now, _isLucky);  
     }
 
     /// @return true if rolldie is lucky

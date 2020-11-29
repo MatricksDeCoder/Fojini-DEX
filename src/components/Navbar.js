@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { GREEN, RED } from './helpers'
+import { GREEN, RED } from '../helpers'
 
 import { accountSelector, 
          exchangeSelector,
@@ -8,7 +8,8 @@ import { accountSelector,
          isEmergencySelector } from '../store/selectors'
 
 import { stopExchange, 
-         startExchange } from '../store/interactions'
+         startExchange, 
+        } from '../store/interactions'
 
 const EmergencySection  = (props) => {
 
@@ -16,54 +17,51 @@ const EmergencySection  = (props) => {
   const color  = isEmergency ? RED : GREEN
   const status = isEmergency ? 'Exchange Is Fully Functional!': 'Exchange In Emergency! Cancel Your Orders! Withdrawals Working!'
 
-  if(account == adminAccount) {
-    
+  if(account === adminAccount) {
     return (
-
-      <li className="nav-item">
+      <a className="navbar-brand" href="#/">
         <button
-          className=`btn-${RED}`
+          className={`btn-${RED}`}
           onClick={(event) => {
-              emergencyStart(
+              stopExchange(
                 dispatch, 
                 exchange,
+                account
               )
             } 
           }
         >
-          Emergency!
+          Stop!
         </button>
-      </li>
-      <li className="nav-item">
         <button
-          className=`btn-${GREEN}`
+          className={`btn-${GREEN}`}
           onClick={(event) => {
-              emergencyStop(
+              startExchange(
                 dispatch, 
                 exchange,
+                account
               )
             } 
           }
         >
-          Emergency!
+          Start!
         </button>
-      </li>
-
+      </a>
     )
 
   } else {
 
     return (
-      <li className="nav-item ">
+      <a className="navbar-brand" href="#/">
         <button
-          className=`btn-${color}`
+          className={`btn-${color}`}
           onClick={(event) => {
             window.alert(status)
           }}
         >
           EXCHANGE STATUS!
-        <button>
-      </li>
+        </button>
+      </a>
     )
 
   }
@@ -71,19 +69,22 @@ const EmergencySection  = (props) => {
 }
 
 class Navbar extends Component {
+
   render() {
+
     return (
       <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
-        <a className="navbar-brand" href="#/">Fojini Token Exchange</a>
+        <a className="navbar-brand" href="#/">Fojini Token Exchange</a>   
+        { EmergencySection(this.props)}    
         <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
           <span className="navbar-toggler-icon"></span>
         </button>
-        <ul className="navbar-nav ml-auto">
-          {EmergencySection(this.props)}
+        <ul className="navbar-nav ml-auto">   
+
           <li className="nav-item">
             <a
               className="nav-link small"
-              href={`https://etherscan.io/address/${this.props.account}`}
+              href={`https://rinkeby.etherscan.io/address/${this.props.account}`}
               target="_blank"
               rel="noopener noreferrer"
             >

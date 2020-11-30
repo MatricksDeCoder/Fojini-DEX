@@ -4,6 +4,9 @@
   "description": "Simple Decentralized Ethereum Token Exchange",
   "author": "@Zed_developer @MatricksDeCoder infinitumcubed@gmail.com ",
   "private": true,
+  "engines": {
+    "node": "8.11.1"
+ },
   "dependencies": {
     "apexcharts": "^3.8.4",
     "babel-polyfill": "^6.26.0",

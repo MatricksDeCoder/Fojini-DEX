@@ -4,15 +4,35 @@ Smart contracts are very critical software as they hold and interact with real v
 
 ##### 1. Reentrancy Attacks 
 The process of sending ether to an address, requires the contract to submit an external call, this can lead to hijack that can reenter the contract. 
-a. .trasnsfer() is pereferred by us over .call() as its limited to 2300 gas. 
+<strike> a. .trasnsfer() is pereferred by us over .call() as its limited to 2300 gas. </strike>
+Due to new information [Stop Using solidity transfer](https://consensys.net/diligence/blog/2019/09/stop-using-soliditys-transfer-now/) all transfer will be replaced with 
+call e.g (bool success, ) = msg.sender.call.value(amount)("") and rely on Check Effects Interactions and Reentrancy Guards!
 b. We do internal work in contracts prior to external calls. The safeguard is aligned to the Check Effects Interactions design pattern we use. For example in our function below, balances ie state are updated before the transfer. 
+c. Reentrancy guards 
 
+***OLD***
 ```
     function withdrawEther(uint _amount) public {
         require(tokens[ETHER][msg.sender] >= _amount);
         tokens[ETHER][msg.sender] = tokens[ETHER][msg.sender].sub(_amount);
         msg.sender.transfer(_amount);
         emit Withdraw(ETHER, msg.sender, _amount, tokens[ETHER][msg.sender]);
+    }
+```
+
+NEW 
+
+```
+    bool locked = false;
+    
+    function withdrawEther(uint _amount) public {
+        require(tokens[ETHER][msg.sender] >= _amount);
+        require(!locked, "Reentrant call detected!");
+        locked = true;
+        tokens[ETHER][msg.sender] = tokens[ETHER][msg.sender].sub(_amount);
+        msg.sender.call.value(_amount)("");
+        emit Withdraw(ETHER, msg.sender, _amount, tokens[ETHER][msg.sender]);
+        locked = false;
     }
 ```
 ##### 2. Overflows and underflows 

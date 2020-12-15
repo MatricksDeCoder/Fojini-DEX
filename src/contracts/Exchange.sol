@@ -6,10 +6,7 @@ pragma solidity 0.5.16;
 /// @notice Import Fojini Token contract 
 import "./Token.sol";
 
-/*
-Include ILighthoue interface
-Interact with currently deployed interfaces
-*/
+/// @notice Include ILighthoue interface. Interact with currently deployed interfaces
 import "./Ilighthouse.sol";
 
 /// @notice Library SafeMath used to prevent overflows and underflows 

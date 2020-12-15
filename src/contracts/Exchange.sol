@@ -53,6 +53,9 @@ contract Exchange {
     /// @notice Track if order is cancelled struct orderCancelled or filled struct orderFilled using its id
     mapping(uint256 => bool) public orderCancelled;
     mapping(uint256 => bool) public orderFilled;
+    
+    /// Reentrancy mutex
+    bool private locked = false;
 
     /// @notice Event when amount deposited exchange
     event Deposit(address token, address user, uint256 amount, uint256 balance);
@@ -79,7 +82,7 @@ contract Exchange {
         uint256 timestamp
     );
     /// @notice Event when a trade is done, buy , sell matched
-    /// @notice Also returns if the trade was a lucky one, so no fees 
+    /// Also returns true if the trade was a lucky one, so no fees 
     event Trade(
         uint256 id,
         address user,
@@ -156,9 +159,11 @@ contract Exchange {
     /// Emit Withdraw event 
     function withdrawEther(uint _amount) external {
         require(tokens[ETHER][msg.sender] >= _amount);
+        require(!locked, "Reentrant call detected!
         tokens[ETHER][msg.sender] = tokens[ETHER][msg.sender].sub(_amount);
-        msg.sender.transfer(_amount);
+        require(msg.sender.call.value(_amount)(""));
         emit Withdraw(ETHER, msg.sender, _amount, tokens[ETHER][msg.sender]);
+        locked = false;
     }
     
     /// @notice Deposit token into exchange  

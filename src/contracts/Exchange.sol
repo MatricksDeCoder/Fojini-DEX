@@ -12,18 +12,14 @@ import "./Ilighthouse.sol";
 /// @notice Library SafeMath used to prevent overflows and underflows 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
-contract Exchange {
+/// @notice Library Ownable to control certain things only admin/owner can do
+import "@openzeppelin/contracts/access/Ownable.sol";
+
+contract Exchange is Ownable {
     using SafeMath for uint;
 
     /// @notice Address Lighthouse for randomness
     ILighthouse  public myLighthouse;
-
-    /// @notice Admin for Circuit breaker pattern
-    address public admin;
-    modifier onlyAdmin {
-        require(msg.sender == admin);
-        _;
-    }
 
     /// @notice Circuit breaker pattern some functions stop in emergency or only run in emergency 
     bool public emergency;
@@ -128,13 +124,13 @@ contract Exchange {
     }
 
     /// @notice Stop some functionality in emergency 
-    function stopExchange() external onlyAdmin stopInEmergency {
+    function stopExchange() external onlyOwner stopInEmergency {
         emergency = true;
         emit StopExchange(msg.sender, emergency);
     }
 
     /// @notice Stop emergency once challenges have been fixed
-    function startExchange() external onlyAdmin onlyInEmergency {
+    function startExchange() external onlyOwner onlyInEmergency {
         emergency = false;
         emit StartExchange(msg.sender, emergency);
     }

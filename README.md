@@ -10,7 +10,7 @@ You need to have [Metamask Wallet](https://metamask.io/). Connect to the app usi
 
 ### Deployment
 
-Smart Contracts deployed to Ethereum [Rinkeby Testnet](https://www.rinkeby.io/#stats) and [Kovan Testnest](https://kovan-testnet.github.io/website/). The smart contracts are not upgradeable. App deployed on [Heroku](https://www.heroku.com/) and is available on site [XXXXX](xxxxx) but must have Metamask installed on your computer.
+Smart Contracts deployed to Ethereum [Rinkeby Testnet](https://www.rinkeby.io/#stats) and [Kovan Testnest](https://kovan-testnet.github.io/website/). The smart contracts are not upgradeable. App deployed on [Heroku](https://www.heroku.com/) and is available on site [https://fojini.herokuapp.com/](https://fojini.herokuapp.com/) but must have Metamask installed on your computer.
 
 ### Technology Stack and Tools
 

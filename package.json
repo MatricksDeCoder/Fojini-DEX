@@ -5,7 +5,8 @@
   "author": "@Zed_developer @MatricksDeCoder infinitumcubed@gmail.com ",
   "private": true,
   "engines": {
-    "node": "8.10.0"
+    "node": "8.10.0",
+    "npm":  "6.14.8"
   },
   "dependencies": {
     "apexcharts": "^3.8.4",

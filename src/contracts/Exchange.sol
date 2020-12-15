@@ -3,7 +3,7 @@ pragma solidity 0.5.16;
 /// @title Fojini Exchange Smart Contract 
 /// @author Zvinodashe Mupambirei 
 
-// Import Fojini Token contract 
+/// @notice Import Fojini Token contract 
 import "./Token.sol";
 
 /*
@@ -12,23 +12,23 @@ Interact with currently deployed interfaces
 */
 import "./Ilighthouse.sol";
 
-// Library SafeMath used to prevent overflows and underflows 
+/// @notice Library SafeMath used to prevent overflows and underflows 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
 contract Exchange {
     using SafeMath for uint;
 
-    // Address Lighthouse for randomness
+    /// @notice Address Lighthouse for randomness
     ILighthouse  public myLighthouse;
 
-    // Admin for Circuit breaker pattern
+    /// @notice Admin for Circuit breaker pattern
     address public admin;
     modifier onlyAdmin {
         require(msg.sender == admin);
         _;
     }
 
-    // Circuit breaker pattern some functions stop in emergency or only run in emergency 
+    /// @notice Circuit breaker pattern some functions stop in emergency or only run in emergency 
     bool public emergency;
 
     modifier stopInEmergency { 
@@ -41,9 +41,9 @@ contract Exchange {
         _;
     }
 
-    // Variables
-    address public feeAccount; // the account that receives exchange fees
-    uint256 public feePercent; // the fee percentage
+    /// @notice Variables feeAccount receives exchange fees, feePercent the fixed fee percentage
+    address public feeAccount; 
+    uint256 public feePercent; 
     
     address public constant ETHER = address(0); // store Ether in tokens mapping with blank address
     mapping(address => mapping(address => uint256)) public tokens;
@@ -53,15 +53,15 @@ contract Exchange {
     uint256 public cancelledOrderCount;
     uint256 public filledOrderCount;
     
-    // Track if order is cancelled or filled using its id
+    /// @notice Track if order is cancelled struct orderCancelled or filled struct orderFilled using its id
     mapping(uint256 => bool) public orderCancelled;
     mapping(uint256 => bool) public orderFilled;
 
-    // Event when amount deposited exchange
+    /// @notice Event when amount deposited exchange
     event Deposit(address token, address user, uint256 amount, uint256 balance);
-    // Event when amount withdrawn exchange
+    /// @notice Event when amount withdrawn exchange
     event Withdraw(address token, address user, uint256 amount, uint256 balance);
-    // Event when an order is placed on an exchange
+    /// @notice Event when an order is placed on an exchange
     event Order(
         uint256 id,
         address user,
@@ -71,7 +71,7 @@ contract Exchange {
         uint256 amountGive,
         uint256 timestamp
     );
-    // Event when an order is cancelled 
+    /// @notice Event when an order is cancelled 
     event Cancel(
         uint256 id,
         address user,
@@ -81,8 +81,8 @@ contract Exchange {
         uint256 amountGive,
         uint256 timestamp
     );
-    // Event when a trade is done, buy , sell matched
-    // Also returns if the trade was a lucky one, so no fees 
+    /// @notice Event when a trade is done, buy , sell matched
+    /// @notice Also returns if the trade was a lucky one, so no fees 
     event Trade(
         uint256 id,
         address user,
@@ -95,14 +95,14 @@ contract Exchange {
         bool isLucky
     );
 
-    //Event when exchange is stopped due to emergency 
+    /// @noticeEvent when exchange is stopped due to emergency 
     event StopExchange(address admin, 
                        bool isEmergency
                        );
-    // Event when exchange is restarted after emergency 
+    /// @notice Event when exchange is restarted after emergency 
     event StartExchange(address admin, 
                         bool isEmergency);
-    // Structs representing an order
+    /// @notice Structs representing an order has unique id, user and amounts to give and ge between two tokens to exchange 
     struct _Order {
         uint256 id;
         address user;
@@ -127,19 +127,19 @@ contract Exchange {
         admin = msg.sender;
     }
 
-    // Stop some functionality in emergency 
+    /// @notice Stop some functionality in emergency 
     function stopExchange() external onlyAdmin stopInEmergency {
         emergency = true;
         emit StopExchange(msg.sender, emergency);
     }
 
-    // Stop emergency once challenges have been fixed
+    /// @notice Stop emergency once challenges have been fixed
     function startExchange() external onlyAdmin onlyInEmergency {
         emergency = false;
         emit StartExchange(msg.sender, emergency);
     }
 
-    // Fallback: reverts if Ether is sent to this smart contract by mistake
+    /// @notice Fallback: reverts if Ether is sent to this smart contract by mistake
     function() external {
         revert();
     }
@@ -147,7 +147,7 @@ contract Exchange {
     /// @notice Deposit ether into exchange 
     /// @dev Zero address used for Ether as it doesnt have contract address
     /// @dev Same Deposit Event used for all tokens, each token is identified by its address
-    // Emit Deposit event   
+    /// Emit Deposit event   
     function depositEther() payable external stopInEmergency {
         tokens[ETHER][msg.sender] = tokens[ETHER][msg.sender].add(msg.value);
         emit Deposit(ETHER, msg.sender, msg.value, tokens[ETHER][msg.sender]);
@@ -156,7 +156,7 @@ contract Exchange {
     /// @notice Withdraw ether from the exchange
     /// @dev Same Withdraw Event used for all tokens, each token is identified by its address
     /// @param _amount of ether to withdraw
-    // Emit Withdraw event 
+    /// Emit Withdraw event 
     function withdrawEther(uint _amount) external {
         require(tokens[ETHER][msg.sender] >= _amount);
         tokens[ETHER][msg.sender] = tokens[ETHER][msg.sender].sub(_amount);
@@ -169,8 +169,8 @@ contract Exchange {
     /// @dev in emergency deposits can stop CIRCUIT BREAKER
     /// @param _token address of token eg DAI contract address, 
     /// @param _amount amount of token to deposit into exchange
-    // Emit Deposit event  
-    // Insure Exchange supposed to be approved to move tokens
+    /// Emit Deposit event  
+    /// Insure Exchange supposed to be approved to move tokens
     function depositToken(address _token, uint _amount) stopInEmergency external {
         require(_token != ETHER);
         require(Token(_token).transferFrom(msg.sender, address(this), _amount));
@@ -182,8 +182,8 @@ contract Exchange {
     /// @dev Token identified by its address
     /// @param _token address of token eg DAI contract address, 
     /// @param _amount amount of token to withdraw from exchange
-    // Emit Withdraw event  
-    // Insure Exchange supposed to be approved to move tokens
+    /// Emit Withdraw event  
+    /// Insure Exchange supposed to be approved to move tokens
     function withdrawToken(address _token, uint256 _amount) external {
         require(_token != ETHER);
         require(tokens[_token][msg.sender] >= _amount);
@@ -206,7 +206,7 @@ contract Exchange {
     /// @param _amountGet amount of _tokenGet  that you want 
     /// @param _tokenGive address token you want to give in exchange for _tokenGet
     /// @param _amountGive amount of _tokenGive you want to give
-    // Emit Order creation event 
+    /// Emit Order creation event 
     function makeOrder(address _tokenGet, uint256 _amountGet, address _tokenGive, uint256 _amountGive) external stopInEmergency {
         orderCount = orderCount.add(1);
         orders[orderCount] = _Order(orderCount, msg.sender, _tokenGet, _amountGet, _tokenGive, _amountGive, now);
@@ -216,7 +216,7 @@ contract Exchange {
     /// @notice Cancel existing order you created 
     /// @dev orders can be cancelled in emergency users will be informed
     /// @param _id unique identifier of the order  to cancel   
-    // Emit Cancel order event 
+    /// Emit Cancel order event 
     function cancelOrder(uint256 _id) external {
         _Order storage _order = orders[_id];
         require(address(_order.user) == msg.sender);
@@ -229,7 +229,7 @@ contract Exchange {
     /// @notice Trade function to give and get amount tokens making exchange  
     /// @dev in emergency making orders stop > CIRCUIT BREAKER
     /// @param _id unique identifier of the order to fill hence do trade  
-    // Emit Trade event 
+    /// Emit Trade event 
     function fillOrder(uint256 _id) external stopInEmergency {
         require(_id > 0 && _id <= orderCount);
         require(!orderFilled[_id]);
@@ -248,7 +248,7 @@ contract Exchange {
     /// @param _amountGet amount of _tokenGet  that you want 
     /// @param _tokenGive address token you want to give in exchange for _tokenGet
     /// @param _amountGive amount of _tokenGive you want to giv 
-    // Internal function to facilitate the trade of tokens 
+    /// Internal function to facilitate the trade of tokens 
     function _trade(uint256 _orderId, address _user, address _tokenGet, uint256 _amountGet, address _tokenGive, uint256 _amountGive) internal {         
 
         bool _isLucky =  _rollDiceLucky();
@@ -275,7 +275,7 @@ contract Exchange {
     }
 
     /// @return true if rolldie is lucky
-    // dice rolled for every trade! If lucky get number 6 no fee charged for trade
+    /// dice rolled for every trade! If lucky get number 6 no fee charged for trade
     function _rollDiceLucky() internal view returns(bool) {
         /*
         Get random number from lighthouse

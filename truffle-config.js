@@ -3,9 +3,9 @@ require('babel-polyfill');
 require('dotenv').config(); //inject environment variables into truffle project
 
 const HDWalletProvider  = require('truffle-hdwallet-provider-privkey');
-const PRIVATE_KEY1      = process.env.PRIVATE_KEY1  || '';
-const PRIVATE_KEY2      = process.env.PRIVATE_KEY2  || '';
-const INFURA_API_KEY    = process.env.INFURA_API_KEY;
+const PRIVATE_KEY1      = process.env.PRIVATE_KEY1   || '';
+const PRIVATE_KEY2      = process.env.PRIVATE_KEY2   || '';
+const INFURA_API_KEY    = process.env.INFURA_API_KEY || '';
 
 module.exports = {
   networks: {

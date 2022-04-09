@@ -22,7 +22,7 @@
     "chai-bignumber": "^3.0.0",
     "dotenv": "^8.1.0",
     "lodash": "^4.17.15",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "openzeppelin-solidity": "^2.3.0",
     "react": "^16.9.0",
     "react-apexcharts": "^1.3.3",

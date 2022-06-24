@@ -23,7 +23,6 @@ class Main extends Component {
   render() {
     return (
       <div className="content">
-        Hello
         <div className="vertical-split">
           <Balance />
           <NewOrder />

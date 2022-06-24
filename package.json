@@ -30,14 +30,16 @@
     "redux": "^4.2.0",
     "redux-logger": "^3.0.6",
     "reselect": "^4.1.6",
+    "serve": "^13.0.2",
     "solc": "^0.8.15",
     "truffle-flattener": "^1.6.0",
     "web3": "^1.7.4"
   },
   "scripts": {
-    "start": "react-scripts --openssl-legacy-provider start",
+    "dev": "react-scripts start",
+    "start": "serve -s build",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "heroku-postbuild": "npm run build"
   },

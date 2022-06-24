@@ -20,7 +20,7 @@ Install packages to check work locally
 6. Install packages npm install
 ```
 
-**\*\***WORKING ON FRONT END******\*\*******
+**\*\***WORKING ON FRONT END**\*\***\*\***\*\***
 Create your feature branch issue and work in it
 Also see READ.me file to understand working with project
 
@@ -48,7 +48,7 @@ Create pull request
 13. git push --set-upstream origin <feature or issue name>
 ```
 
-\***\*BLOCKCHAIN AND SMART CONTRACTS**\*\*\*****
+\***\*BLOCKCHAIN AND SMART CONTRACTS**\*\*\*\*\*\*\*
 Changing blockchain related files like smart contracts, migrations, truffle-config requires new deployments to the blockchain
 Colloboration options under consideration include
 Also see READ.me file to understand working with project
@@ -72,3 +72,6 @@ git push origin master
 ```
 
 ```
+
+Heroku Deployment Challenges
+https://dev.to/lawrence_eagles/causes-of-heroku-h10-app-crashed-error-and-how-to-solve-them-3jnl

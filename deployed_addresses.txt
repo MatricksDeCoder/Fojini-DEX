@@ -1,0 +1,3 @@
+Contract                 Network          Address
+Token                    Rinkeby         0x56256619e6659f67ca9cb47aCe2399eaEEcb8338 
+Exchange                 Rinkeby         0xd708B6eE8f1F4F249CA960C04B1ACaeba7635CA9

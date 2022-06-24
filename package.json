@@ -1,0 +1,58 @@
+{
+  "name": "fojini-dex",
+  "version": "0.1.0",
+  "description": "Simple Decentralized Ethereum Token Exchange",
+  "author": "@Zed_developer @MatricksDeCoder infinitumcubed@gmail.com ",
+  "private": true,
+  "engines": {
+    "node": "16.13.0",
+    "npm": "8.1.0"
+  },
+  "dependencies": {
+    "@babel/preset-env": "^7.18.2",
+    "@babel/register": "^7.17.7",
+    "@openzeppelin/contracts": "^4.6.0",
+    "@truffle/hdwallet-provider": "^2.0.9",
+    "apexcharts": "^3.35.3",
+    "bootstrap": "^4.6.1",
+    "chai": "^4.3.6",
+    "chai-as-promised": "^7.1.1",
+    "chai-bignumber": "^3.0.0",
+    "dotenv": "^8.6.0",
+    "lodash": "^4.17.21",
+    "moment": "^2.29.3",
+    "react": "^18.2.0",
+    "react-apexcharts": "^1.4.0",
+    "react-bootstrap": "^1.6.5",
+    "react-dom": "^18.2.0",
+    "react-redux": "^7.2.8",
+    "react-scripts": "^4.0.3",
+    "redux": "^4.2.0",
+    "redux-logger": "^3.0.6",
+    "reselect": "^4.1.6",
+    "solc": "^0.8.15",
+    "truffle-flattener": "^1.6.0",
+    "web3": "^1.7.4"
+  },
+  "scripts": {
+    "start": "react-scripts --openssl-legacy-provider start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
